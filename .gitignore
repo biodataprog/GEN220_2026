@@ -224,3 +224,6 @@ docs/Gemfile
 docs/Gemfile.lock
 docs/_site/
 docs/.jekyll-cache/
+
+# instructor-only notes and solutions (never published)
+instructor_notes/

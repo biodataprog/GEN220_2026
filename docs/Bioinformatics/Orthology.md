@@ -67,12 +67,15 @@ _Will write this in Python in Class_
 We will take 3 datasets of annotated Cyanobacteria, download and run analysis to generate Ortholog table.
 
 ```bash
-#!/usr/bin/bash
-#SBATCH --ntasks 16 --mem 8G -p short
+#!/bin/bash -l
+#SBATCH -p short -N 1 -n 1 -c 8 --mem 8G --time 2:00:00
+#SBATCH -J orthofinder
+#SBATCH -o logs/%x.%j.log
 module load ncbi-blast
 module load orthofinder
-module load miniconda2
-CPU=8
+
+set -euo pipefail
+CPU=${SLURM_CPUS_PER_TASK:-1}
 
 mkdir -p cyanobacteria
 cd cyanobacteria
@@ -89,8 +92,11 @@ done
 
 cd ..
 
-orthofinder -a $CPU -f cyanobacteria
+# -t: threads for the all-vs-all sequence searches, -a: threads for the tree/analysis steps
+orthofinder -t $CPU -a $CPU -f cyanobacteria
 ```
+
+Run `mkdir -p logs` before you `sbatch` it. See [UNIX IV](../UNIX/03_Advanced_UNIX_DataProcessing) for how to choose `-c`, `--mem` and `--time`.
 
 # Ortholog results
 

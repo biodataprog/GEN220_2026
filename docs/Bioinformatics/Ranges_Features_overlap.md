@@ -14,8 +14,10 @@ Some starter example code:
 [https://github.com/biodataprog/GEN220_2019_examples/tree/master/Bioinformatics_1/Ranges](https://github.com/biodataprog/GEN220_2019_examples/tree/master/Bioinformatics_1/Ranges)
 
 ```bash
-#!/usr/bin/bash
+#!/bin/bash -l
 module load bedtools
+
+set -euo pipefail
 
 bedtools intersect -a rice_chr6.fixed_Chr.gff -b rice_chr6_3kSNPs_filt.bed -wo > snp_gene_intersect.tab
 

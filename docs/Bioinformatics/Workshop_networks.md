@@ -113,13 +113,15 @@ done
 For the gene family part (section 6) we will also want each genome searched **against itself** (to find paralogs). That is 3 more searches; the easiest is to remove the `if` so all 9 combinations run. On the cluster, put it in a job script - here it is with all 9:
 
 ```bash
-#!/usr/bin/bash -l
+#!/bin/bash -l
 #SBATCH -p short -N 1 -n 1 -c 8 --mem 8G --time 2:00:00
-#SBATCH --job-name blast3 --out blast3.%A.log
+#SBATCH -J blast3
+#SBATCH -o logs/%x.%j.log
 
 module load ncbi-blast
 
-CPU=${SLURM_CPUS_PER_TASK:-2}   # the -c value above; 2 if not run by SLURM
+set -euo pipefail
+CPU=${SLURM_CPUS_PER_TASK:-1}   # the -c value above; 1 if not run by SLURM
 GENOMES="E_coli_K12 E_coli_O157_H7 S_enterica"
 
 for name in $GENOMES
@@ -144,7 +146,7 @@ do
 done
 ```
 
-Save it as `run_blast.sh` and submit it with `sbatch run_blast.sh`; check on it with `squeue -u $USER`. The `if [ ! -s $OUT ]` test skips searches that already finished, so if the job runs out of time you can just submit it again.
+Save it as `run_blast.sh`, make the log folder with `mkdir -p logs`, and submit it with `sbatch run_blast.sh`; check on it with `squeue -u $USER`. The `if [ ! -s $OUT ]` test skips searches that already finished, so if the job runs out of time you can just submit it again.
 
 **How long does it take?** On a laptop (Apple M3, BLAST+ 2.17, `-num_threads 4`) each search took **15-40 seconds**, and all 9 took **3-4 minutes** in total (two separate runs). The cluster should be similar; the job may wait in the queue longer than it runs. Bacterial proteomes are small - the same all-vs-all approach for large eukaryotic genomes (20,000-40,000 proteins each) takes hours to days, which is why tools like DIAMOND exist.
 

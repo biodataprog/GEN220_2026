@@ -28,7 +28,7 @@ See the [Building Websites](../Misc/Building_Websites) lecture notes and the Git
     cd YOURGITHUBID.github.io
     ```
 
-3. On github.com go to the repository **Settings** → **Pages**. Under **Build and deployment**, set **Source** to *Deploy from a branch*, then choose branch `main` and folder `/ (root)` and click **Save**.
+3. On github.com go to the repository **Settings** -> **Pages**. Under **Build and deployment**, set **Source** to *Deploy from a branch*, then choose branch `main` and folder `/ (root)` and click **Save**.
 
 4. Create a file called `_config.yml` which tells GitHub Pages how to build the site. This picks a theme and gives the site a title:
 

@@ -7,14 +7,20 @@ There are several strategies for variant calling.
 [Workflows from the htslib](http://www.htslib.org/workflow/)
 
 ```bash
-#SBATCH -p batch -N 1 -n 4 --mem 16gb
-module unload perl
+#!/bin/bash -l
+#SBATCH -p short -N 1 -n 1 -c 4 --mem 16gb --time 2:00:00
+#SBATCH -J bcftools_call
+#SBATCH -o logs/%x.%j.log
 module load samtools
 module load bcftools
+
+set -euo pipefail
+CPU=${SLURM_CPUS_PER_TASK:-1}
 GENOME=S_enterica_CT18.fasta
 
 # need to make a string which is all the bam files you want to process
 # but if we do *.bam it will catch the intermediate bam files that are in the folder
+m=""
 for a in $(cat acc.txt)
 do
   m="$a.bam $m"
@@ -22,11 +28,12 @@ done
 
 VCF=Salmonella.vcf.gz
 VCFFILTER=Salmonella.filtered.vcf.gz
-bcftools mpileup -Ou -f $GENOME $m | bcftools call -vmO z -o $VCF
+bcftools mpileup -Ou -f $GENOME $m | bcftools call --threads $CPU -vmO z -o $VCF
 tabix -p vcf $VCF
 bcftools stats -F $GENOME -s - $VCF > $VCF.stats
 mkdir -p plots
-plot-vcfstats -p plots/ $VCF.stats
+# plot-vcfstats needs python3 with matplotlib; don't stop the job if it fails
+plot-vcfstats -p plots/ $VCF.stats || echo "plot-vcfstats failed - skipping the plots"
 bcftools filter -O z -o $VCFFILTER -s LOWQUAL -i'%QUAL>10' $VCF
 ```
 
@@ -35,6 +42,9 @@ bcftools filter -O z -o $VCFFILTER -s LOWQUAL -i'%QUAL>10' $VCF
 An existing framework that works can be checked out from [https://github.com/biodataprog/GEN220_2022_examples](https://github.com/biodataprog/GEN220_2022_examples) see the Variants folder.
 
 Make sure you are running this in ~/bigdata or somewhere with enough space as this will generate large files.
+The job scripts write their logs to `logs/`, so run `mkdir -p logs` in the `Variants` folder before submitting anything.
+See [UNIX IV](../UNIX/03_Advanced_UNIX_DataProcessing) for how to choose `-c`, `--mem` and `--time`, and for how job arrays work.
+The pipeline scripts shown below test for unset variables and missing files themselves (e.g. `if [ -z "$N" ]`), so unlike the template in UNIX IV they don't use `set -euo pipefail`; if you write your own pipeline, start from the template.
 
 The first script `pipeline_GATK/00_index.sh` will download the genome, index and download the fastq files from NCBI SRA. If you had different datasets you would develop your own data files and script.
 
@@ -93,9 +103,12 @@ This step uses the 4 strains which are already on the cluster.
 Or if you are on your own computer and have the sratoolkit (fastq-dump) installed it will download that.
 
 ```bash
-#!/usr/bin/bash
-module load samtools/1.11
-module load bwa/0.7.17
+#!/bin/bash -l
+#SBATCH -p short -N 1 -n 1 -c 1 --mem 4G --time 2:00:00
+#SBATCH -J index
+#SBATCH -o logs/%x.%j.log
+module load samtools
+module load bwa
 if [ -f config.txt ]; then
 	source config.txt
 fi
@@ -159,20 +172,23 @@ done
 Run this as
 
 ```bash
-sbatch -a 1-4 pipeline_GATK/01_align.sh
+# one array task per strain: the 4 lines of samples.csv after the header
+sbatch --array=1-4 pipeline_GATK/01_align.sh
 ```
 
 You will need to wait for it to finish before doing step 3. This step uses the 4 strains.
 The code at the bottom is for generating a dataset of unaligned reads for further assembly alone.
 
 ```bash
-#!/bin/bash
-#SBATCH -N 1 -n 16 --mem 32gb --out logs/bwa.%a.log --time 8:00:00
+#!/bin/bash -l
+#SBATCH -p epyc -N 1 -n 1 -c 16 --mem 32gb --time 8:00:00
+#SBATCH -J bwa
+#SBATCH -o logs/%x.%A_%a.log
 module load bwa
-module load samtools/1.11
+module load samtools
 module load picard
-module load gatk/4
-module load java/13
+module load gatk/4    # the commands below use GATK4 syntax
+module load java
 
 MEM=32g
 
@@ -191,15 +207,9 @@ if [ ! -f $REFGENOME.dict ]; then
 fi
 mkdir -p $TMPOUTDIR $ALNFOLDER
 
-CPU=2
-if [ $SLURM_CPUS_ON_NODE ]; then
-  CPU=$SLURM_CPUS_ON_NODE
-fi
-N=${SLURM_ARRAY_TASK_ID}
-if [ -z $N ]; then
-  N=$1
-fi
-if [ -z $N ]; then
+CPU=${SLURM_CPUS_PER_TASK:-1}
+N=${SLURM_ARRAY_TASK_ID:-$1}
+if [ -z "$N" ]; then
   echo "cannot run without a number provided either cmdline or --array in sbatch"
   exit
 fi
@@ -284,17 +294,19 @@ done
 **Step 3.** This step converts the .cram files (which are BAM files but in a more compressed format) into g.vcf files which are for calling all possible variants. You run it again with array jobs and one job per strain.
 
 ```bash
-sbatch -a 1-4 pipeline_GATK/02_call_gvcf.sh
+sbatch --array=1-4 pipeline_GATK/02_call_gvcf.sh
 ```
 
 
 ```bash
-#!/usr/bin/bash
-#SBATCH -p intel -N 1 -n 16 --mem 32gb --out logs/make_gvcf.%a.log --time 48:00:00
+#!/bin/bash -l
+#SBATCH -p epyc -N 1 -n 1 -c 16 --mem 32gb --time 48:00:00
+#SBATCH -J make_gvcf
+#SBATCH -o logs/%x.%A_%a.log
 
 module load picard
-module load java/13
-module load gatk/4
+module load java
+module load gatk/4    # GATK4 syntax
 module load bcftools
 
 MEM=32g
@@ -310,17 +322,10 @@ if [ ! -f $DICT ]; then
 	picard CreateSequenceDictionary R=$REFGENOME O=$DICT
 fi
 mkdir -p $VARIANTFOLDER
-CPU=1
-if [ $SLURM_CPUS_ON_NODE ]; then
- CPU=$SLURM_CPUS_ON_NODE
-fi
-N=${SLURM_ARRAY_TASK_ID}
+CPU=${SLURM_CPUS_PER_TASK:-1}
+N=${SLURM_ARRAY_TASK_ID:-$1}
 
-if [ ! $N ]; then
- N=$1
-fi
-
-if [ ! $N ]; then
+if [ -z "$N" ]; then
  echo "need to provide a number by --array slurm or on the cmdline"
  exit
 fi
@@ -357,23 +362,25 @@ date
 If your genome is fragmented you will want to adjust the parameter in `config.txt` file so that `GVCF_INTERVAL=1` is more like 5 or 10 and then adjust your job number by that factor. Eg if you have 1000 contigs and `GVCF_INTERVAL=5` then you would want to run array jobs with 1000/5 = 200 instead of 1000 jobs.
 
 ```bash
-sbatch -a 1-9 pipeline_GATK/03_jointGVCF_call_slice.sh
+# 9 tasks = the 9 sequences in the A. fumigatus genome (with GVCF_INTERVAL=1)
+sbatch --array=1-9 pipeline_GATK/03_jointGVCF_call_slice.sh
 ```
 
 Here is the Code
 
 ```bash
-#!/usr/bin/bash
-#SBATCH --mem 24G --nodes 1 --ntasks 2 -J slice.GVCFGeno --out logs/GVCFGenoGATK4.slice_%a.log  -p intel
-#--time 48:00:00
+#!/bin/bash -l
+#SBATCH -p epyc -N 1 -n 1 -c 2 --mem 24G --time 48:00:00
+#SBATCH -J slice.GVCFGeno
+#SBATCH -o logs/%x.%A_%a.log
 hostname
 MEM=24g
-module unload java
 module load picard
-module load gatk/4
-module load java/13
+module load gatk/4    # GATK4 syntax
+module load java
 module load bcftools
 module load parallel
+module load samtools
 
 source config.txt
 
@@ -389,14 +396,11 @@ cleanup() {
 trap "cleanup; rm -rf $TEMPDIR; exit" SIGHUP SIGINT SIGTERM EXIT
 
 GVCF_INTERVAL=1
-N=${SLURM_ARRAY_TASK_ID}
+N=${SLURM_ARRAY_TASK_ID:-$1}
 
-if [ -z $N ]; then
-    N=$1
-    if [ -z $N ]; then
-        echo "Need an array id or cmdline val for the job"
-        exit
-    fi
+if [ -z "$N" ]; then
+    echo "Need an array id or cmdline val for the job"
+    exit
 fi
 if [ -f config.txt ]; then
 	source config.txt
@@ -412,8 +416,7 @@ FILTERINDEL=$STEM.INDEL.filter.vcf
 SELECTSNP=$STEM.SNP.selected.vcf
 SELECTINDEL=$STEM.INDEL.selected.vcf
 
-if [ ! -f $REFGENOME ]; then
-    module load samtools/1.9
+if [ ! -f $REFGENOME.fai ]; then
     samtools faidx $REFGENOME
 fi
 NSTART=$(perl -e "printf('%d',1 + $GVCF_INTERVAL * ($N - 1))")
@@ -428,10 +431,7 @@ if [ "$NEND" -gt "$MAX" ]; then
 fi
 echo "$NSTART -> $NEND"
 
-CPU=$SLURM_CPUS_ON_NODE
-if [ ! $CPU ]; then
-    CPU=2
-fi
+CPU=${SLURM_CPUS_PER_TASK:-1}
 if [[ $(ls $GVCFFOLDER | grep -c -P "\.g.vcf$") -gt "0" ]]; then
     parallel -j $CPU bgzip {} ::: $GVCFFOLDER/*.g.vcf
     parallel -j $CPU tabix -f {} ::: $GVCFFOLDER/*.g.vcf.gz
@@ -551,12 +551,13 @@ sbatch pipeline_GATK/08_snpEff.sh
 ```
 
 ```bash
-#!/usr/bin/bash
-#SBATCH --mem=64G -p batch --nodes 1 --ntasks 2 --out logs/snpEff.log
-module unload miniconda2
+#!/bin/bash -l
+#SBATCH -p epyc -N 1 -n 1 -c 2 --mem 64G --time 12:00:00
+#SBATCH -J snpEff
+#SBATCH -o logs/%x.%j.log
 module load miniconda3
 module load snpEff
-module load bcftools/1.11
+module load bcftools
 module load tabix
 # THIS IS AN EXAMPLE OF HOW TO MAKE SNPEFF - it is for A.fumigatus
 SNPEFFGENOME=AfumigatusAf293_FungiDB_39

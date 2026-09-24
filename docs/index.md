@@ -56,19 +56,22 @@ git clone https://github.com/biodataprog/GEN220_data.git
 The course will be divided into three topic areas.
 
 ## UNIX
-1. [Course Intro / UNIX I: Cmdline](UNIX/00_Login_Notebook) [PDF](UNIX/00_Login_Notebook.pdf)
-1. [UNIX: Running Tools](UNIX/01_Tools) [PDF](UNIX/01_Tools.pdf)
-1. [UNIX: Analysis and Programming](UNIX/02_Analysis_summary) [PDF](UNIX/02_Analysis_summary.pdf)
-1. [UNIX: Misc Tricks](UNIX/03_Advanced_UNIX_DataProcessing) [PDF](UNIX/03_Advanced_UNIX_DataProcessing.pdf)
+1. [UNIX I: Logging In and Command Line Basics](UNIX/00_Login_Notebook) [PDF](UNIX/00_Login_Notebook.pdf)
+1. [UNIX II: Files, Data and Running Programs](UNIX/01_Tools) [PDF](UNIX/01_Tools.pdf)
+1. [UNIX III: Shell Programming](UNIX/02_Analysis_summary) [PDF](UNIX/02_Analysis_summary.pdf)
+1. [UNIX III Lab: Data Processing with Pipes](UNIX/02b_Data_processing_lab) [PDF](UNIX/02b_Data_processing_lab.pdf) (lab / reading)
+1. [UNIX IV: Running Analyses on the Cluster](UNIX/03_Advanced_UNIX_DataProcessing) [PDF](UNIX/03_Advanced_UNIX_DataProcessing.pdf)
 
 ## Python
-1. [Python: Intro](Python/01_Python_Intro) [PDF](Python/01_Python_Intro.pdf)
-1. [Python: Logic,Loops,IO](Python/02_Loops_IO) [PDF](Python/02_Loops_IO.pdf)
-1. [Python: Dictionaries and Functions](Python/03_Dict_Func.md) [PDF](Python/03_Dict_Func.pdf)
-1. [Python: Workshop](Python/04_Workshop) [PDF](Python/04_Workshop.pdf)
-1. [Python: Regular Expressions](Python/05_String_patterns) [PDF](Python/05_String_patterns.pdf)
-1. [Python: Packages/BioPython](Python/06_Packages) [PDF](Python/06_Packages.pdf)
-1. [Python: Plotting Data](Python/09_Plotting) [PDF](Python/09_Plotting.pdf)
+1. [Python I: Values, Variables and Strings](Python/01_Python_Intro) [PDF](Python/01_Python_Intro.pdf)
+1. [Python II: Decisions, Lists, Loops and Files](Python/02_Loops_IO) [PDF](Python/02_Loops_IO.pdf)
+1. [Python III: Dictionaries, Sets, Tuples and Functions](Python/03_Dict_Func) [PDF](Python/03_Dict_Func.pdf)
+1. [Python Workshop: Practice with Real Data](Python/04_Workshop) [PDF](Python/04_Workshop.pdf)
+1. [Python IV: Modules, Packages and Biopython](Python/06_Packages) [PDF](Python/06_Packages.pdf)
+1. [Python IV: Tables with Pandas](Python/07_Pandas) [PDF](Python/07_Pandas.pdf)
+1. [Python V: Regular Expressions](Python/05_String_patterns) [PDF](Python/05_String_patterns.pdf)
+1. [Python V: Regular Expressions Worked Examples](Python/08_Regexp_Worked_examples) [PDF](Python/08_Regexp_Worked_examples.pdf)
+1. [Plotting Data with Python](Python/09_Plotting) [PDF](Python/09_Plotting.pdf)
 
 ## Bioinformatics and Genomics
 1. [Bioinformatics: Basics and BLAST](Bioinformatics/Basic_Bioinformatics) [PDF](Bioinformatics/Basic_Bioinformatics.pdf)
@@ -88,6 +91,6 @@ The course will be divided into three topic areas.
 
 
 ## Other skills and Tools
-1. [Plotting data with R and ggplot2](Misc/Rplotting) [PDF](Misc/Rplotting.pdf) - includes an R primer. Use RStudio on HPCC [https://rstudio.hpcc.ucr.edu](https://rstudio.hpcc.ucr.edu/), [Posit Cloud](https://posit.cloud/) or install [RStudio](https://posit.co/download/rstudio-desktop/) on your own computer. The same plots in Python are in [Python: Plotting Data](Python/09_Plotting).
+1. [Plotting data with R and ggplot2](Misc/Rplotting) [PDF](Misc/Rplotting.pdf) - includes an R primer. Use RStudio on HPCC through [OnDemand](https://ondemand.hpcc.ucr.edu/), [Posit Cloud](https://posit.cloud/) or install [RStudio](https://posit.co/download/rstudio-desktop/) on your own computer. The same plots in Python are in [Python: Plotting Data](Python/09_Plotting).
 1. [Building Websites](Misc/Building_Websites) using github.io [PDF](Misc/Building_Websites.pdf)
 1. [Tabular data: CSV, Parquet and SQL with DuckDB](Misc/SQL_DuckDB) [PDF](Misc/SQL_DuckDB.pdf)

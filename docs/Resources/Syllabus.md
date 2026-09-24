@@ -123,8 +123,8 @@ Schedule
 | Date	| Day |	Lecture Topic	|	Notes
 | :------ | :---- | :---------------------- | :------------ |
 | Sep-24 |	Th	|	Course Intro / UNIX I: Logging into HPCC, command line basics; GitHub account and SSH keys | Homework 0 assigned |
-| Sep-29	|	Tu	|	UNIX II: Running programs on the HPCC cluster (modules, srun, sbatch); Git and GitHub: clone, commit, push | Homework 1 assigned |
-| Oct-1	|	Th	|	UNIX III: Data processing tools (cut, sort, uniq, zcat), pipes, loops and shell scripts | Homework 0 Due |
+| Sep-29	|	Tu	|	UNIX II: Files, data and running programs on the HPCC cluster (modules, srun; sbatch preview); Git and GitHub: clone, commit, push | Homework 1 assigned |
+| Oct-1	|	Th	|	UNIX III: Shell programming - variables, loops and scripts (lab/reading: data processing with cut, sort, uniq, awk) | Homework 0 Due |
 | Oct-6	|	Tu	|	Python I: Variables, running, cmdline, strings, math | 	|
 | Oct-8	|	Th	|	Python II - Logic, loops, lists, iterator; I/O reading/writing files	| Homework 1 Due; Homework 2 assigned |
 | Oct-13	|	Tu	|	Python III - Dictionaries and Functions	|	 |

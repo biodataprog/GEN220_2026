@@ -23,7 +23,7 @@ Good references to keep open:
 
 ## Where to run R
 
-* **RStudio on the cluster**: log in at [https://rstudio.hpcc.ucr.edu](https://rstudio.hpcc.ucr.edu/) with your HPCC account. Your cluster home directory and files are all there.
+* **RStudio on the cluster**: log in to [OnDemand](https://ondemand.hpcc.ucr.edu/) with your HPCC account and start an **RStudio** session from **Interactive Apps** (see [UNIX I](../UNIX/00_Login_Notebook)). Your cluster home directory and files are all there.
 * **Command line on the cluster**: `module load R` and then either `R` (interactive) or `Rscript myscript.R` (run a whole script, e.g. inside a Slurm job).
 * **Your laptop**: install [R](https://cloud.r-project.org/) and then [RStudio Desktop](https://posit.co/download/rstudio-desktop/), or use [Posit Cloud](https://posit.cloud/).
 

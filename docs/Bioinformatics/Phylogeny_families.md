@@ -5,6 +5,8 @@ Last day of class is usually a mix of trying to find gaps or fill in holes.
 I discussed phylogenetic tree building.
 
 ```bash
+# run these in an interactive session, e.g.
+# srun -p short -N 1 -n 1 -c 2 --mem 4G --time 2:00:00 --pty bash -l
 git clone https://github.com/biodataprog/GEN220_2025_classexamples.git
 cd GEN220_2025_classexamples/Trees
 module load muscle
@@ -12,6 +14,7 @@ module load fasttree
 module load iqtree
 module load trimal
 module load clipkit
+CPU=${SLURM_CPUS_PER_TASK:-1}
 
 # build an alignment of sequences already identified as homologs
 # previously I had started with MET12 (S. cerevisiae) enzyme
@@ -25,10 +28,12 @@ trimal -automated1 -in MET12.hit_seqs.fasaln -out MET12.hit_seqs.mfa.trim
 # this is an alternative alignment trimmer
 clipkit MET12.hit_seqs.fasaln 
 # build a tree w fastree (FastTreeMP uses multiple processors, FastTree uses 1 processor only)
-FastTreeMP <  MET12.hit_seqs.fasaln >  MET12.hit_seqs.tre
+# FastTreeMP uses OpenMP: OMP_NUM_THREADS sets how many CPUs it uses
+OMP_NUM_THREADS=$CPU FastTreeMP <  MET12.hit_seqs.fasaln >  MET12.hit_seqs.tre
 
-# build a tree with IQ-TREE2 - ultrafast bootstrap and first determine optimal number of processors to use
-iqtree3 -s MET12.hit_seqs.fasaln -nt 2 -bb 1000 -alrt 1000
+# build a tree with IQ-TREE 3: -B = ultrafast bootstrap replicates, --alrt = SH-aLRT test replicates,
+# -T = number of threads (-T AUTO instead lets IQ-TREE test and pick the optimal number)
+iqtree3 -s MET12.hit_seqs.fasaln -T $CPU -B 1000 --alrt 1000
 ```
 
 Some links

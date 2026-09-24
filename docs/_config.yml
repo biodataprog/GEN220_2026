@@ -69,20 +69,21 @@ defaults:
   - { scope: { path: "Resources/index.md" }, values: { title: Resources, has_children: true, nav_order: 7 } }
 
   # UNIX
-  - { scope: { path: "UNIX/00_Login_Notebook.md" }, values: { title: "Course Intro / UNIX I: Cmdline", parent: UNIX, nav_order: 1 } }
-  - { scope: { path: "UNIX/01_Tools.md" }, values: { title: "UNIX: Running Tools", parent: UNIX, nav_order: 2 } }
-  - { scope: { path: "UNIX/02_Analysis_summary.md" }, values: { title: "UNIX: Analysis and Programming", parent: UNIX, nav_order: 3 } }
-  - { scope: { path: "UNIX/03_Advanced_UNIX_DataProcessing.md" }, values: { title: "UNIX: Misc Tricks", parent: UNIX, nav_order: 4 } }
+  - { scope: { path: "UNIX/00_Login_Notebook.md" }, values: { title: "UNIX I: Logging In and Command Line Basics", parent: UNIX, nav_order: 1 } }
+  - { scope: { path: "UNIX/01_Tools.md" }, values: { title: "UNIX II: Files, Data and Running Programs", parent: UNIX, nav_order: 2 } }
+  - { scope: { path: "UNIX/02_Analysis_summary.md" }, values: { title: "UNIX III: Shell Programming", parent: UNIX, nav_order: 3 } }
+  - { scope: { path: "UNIX/02b_Data_processing_lab.md" }, values: { title: "UNIX III Lab: Data Processing with Pipes", parent: UNIX, nav_order: 3.5 } }
+  - { scope: { path: "UNIX/03_Advanced_UNIX_DataProcessing.md" }, values: { title: "UNIX IV: Running Analyses on the Cluster", parent: UNIX, nav_order: 4 } }
   # Python
-  - { scope: { path: "Python/01_Python_Intro.md" }, values: { title: "Python: Intro", parent: Python, nav_order: 1 } }
-  - { scope: { path: "Python/02_Loops_IO.md" }, values: { title: "Python: Logic, Loops, IO", parent: Python, nav_order: 2 } }
-  - { scope: { path: "Python/03_Dict_Func.md" }, values: { title: "Python: Dictionaries and Functions", parent: Python, nav_order: 3 } }
-  - { scope: { path: "Python/04_Workshop.md" }, values: { title: "Python: Workshop", parent: Python, nav_order: 4 } }
-  - { scope: { path: "Python/05_String_patterns.md" }, values: { title: "Python: Regular Expressions", parent: Python, nav_order: 5 } }
-  - { scope: { path: "Python/06_Packages.md" }, values: { title: "Python: Packages/BioPython", parent: Python, nav_order: 6 } }
-  - { scope: { path: "Python/07_Pandas.md" }, values: { title: "Python: Pandas", parent: Python, nav_order: 7 } }
-  - { scope: { path: "Python/08_Regexp_Worked_examples.md" }, values: { title: "Python: Regexp Worked Examples", parent: Python, nav_order: 8 } }
-  - { scope: { path: "Python/09_Plotting.md" }, values: { title: "Python: Plotting Data", parent: Python, nav_order: 9 } }
+  - { scope: { path: "Python/01_Python_Intro.md" }, values: { title: "Python I: Values, Variables and Strings", parent: Python, nav_order: 1 } }
+  - { scope: { path: "Python/02_Loops_IO.md" }, values: { title: "Python II: Decisions, Lists, Loops and Files", parent: Python, nav_order: 2 } }
+  - { scope: { path: "Python/03_Dict_Func.md" }, values: { title: "Python III: Dictionaries, Sets, Tuples and Functions", parent: Python, nav_order: 3 } }
+  - { scope: { path: "Python/04_Workshop.md" }, values: { title: "Python Workshop: Practice with Real Data", parent: Python, nav_order: 4 } }
+  - { scope: { path: "Python/05_String_patterns.md" }, values: { title: "Python V: Regular Expressions", parent: Python, nav_order: 7 } }
+  - { scope: { path: "Python/06_Packages.md" }, values: { title: "Python IV: Modules, Packages and Biopython", parent: Python, nav_order: 5 } }
+  - { scope: { path: "Python/07_Pandas.md" }, values: { title: "Python IV: Tables with Pandas", parent: Python, nav_order: 6 } }
+  - { scope: { path: "Python/08_Regexp_Worked_examples.md" }, values: { title: "Python V: Regular Expressions Worked Examples", parent: Python, nav_order: 8 } }
+  - { scope: { path: "Python/09_Plotting.md" }, values: { title: "Plotting Data with Python", parent: Python, nav_order: 9 } }
   # Bioinformatics
   - { scope: { path: "Bioinformatics/Basic_Bioinformatics.md" }, values: { title: "Basics and BLAST", parent: Bioinformatics, nav_order: 1 } }
   - { scope: { path: "Bioinformatics/Workshop_parsing.md" }, values: { title: "Workshop: Parsing Data", parent: Bioinformatics, nav_order: 2 } }

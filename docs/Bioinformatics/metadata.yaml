@@ -1,3 +1,12 @@
 ---
 urlcolor: blue
+geometry: margin=0.9in
+header-includes: |
+  \input{glyphtounicode}
+  \pdfglyphtounicode{asciicircum}{005E}
+  \pdfglyphtounicode{circumflex}{005E}
+  \pdfglyphtounicode{asciitilde}{007E}
+  \pdfglyphtounicode{tilde}{007E}
+  \pdfgentounicode=1
+  \usepackage{upquote}
 ---

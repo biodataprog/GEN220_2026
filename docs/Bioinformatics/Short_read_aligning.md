@@ -25,28 +25,39 @@ bwa-mem2 mem
 It is necessary to index the genome in preparation for alignment.
 
 ```bash
-#!/usr/bin/bash -l
-#SBATCH -p short -N 1 -n 1 -c 2 --mem 2gb
+#!/bin/bash -l
+#SBATCH -p short -N 1 -n 1 -c 1 --mem 2gb --time 1:00:00
+#SBATCH -J bwaindex
+#SBATCH -o logs/%x.%j.log
 module load bwa
+
+set -euo pipefail
 GENOME=S_enterica_CT18.fasta
 bwa index $GENOME
 ```
 
+`bwa index` runs on a single CPU, so `-c 1` is enough. Remember to `mkdir -p logs` before you `sbatch` a script that writes its log to `logs/`.
+
 ### Align reads
 
 ```bash
-#!/usr/bin/bash -l
-#SBATCH -p short -N 1 -n 1 -c 16 --mem 4gb
+#!/bin/bash -l
+#SBATCH -p short -N 1 -n 1 -c 8 --mem 16gb --time 2:00:00
+#SBATCH -J bwamem
+#SBATCH -o logs/%x.%j.log
 
 module load bwa
 module load samtools
-CPU=16
+
+set -euo pipefail
+CPU=${SLURM_CPUS_PER_TASK:-1}
 mkdir -p ~/bigdata/Short_read_aligning
 cd ~/bigdata/Short_read_aligning
 mkdir -p fastq
-ln -s /bigdata/gen220/shared/data/S_enterica/*.fastq.gz fastq
-ln -s /bigdata/gen220/shared/data/S_enterica/S_enterica_CT18.fasta
-ln -s /bigdata/gen220/shared/data/S_enterica/acc.txt
+# -f: replace the links if they already exist (so the script can be rerun)
+ln -sf /bigdata/gen220/shared/data/S_enterica/*.fastq.gz fastq
+ln -sf /bigdata/gen220/shared/data/S_enterica/S_enterica_CT18.fasta .
+ln -sf /bigdata/gen220/shared/data/S_enterica/acc.txt .
 GENOME=S_enterica_CT18.fasta
 if [ ! -f $GENOME.sa ]; then
    bwa index $GENOME
@@ -58,11 +69,13 @@ do
 	REVREAD=fastq/${acc}_2.fastq.gz
 
 	bwa mem -t $CPU $GENOME $FWDREAD $REVREAD > ${acc}.sam
-	samtools fixmate -O bam ${acc}.sam ${acc}_fixmate.bam
+	samtools fixmate --threads $CPU -O bam ${acc}.sam ${acc}_fixmate.bam
 	samtools sort --threads $CPU -O BAM -o ${acc}.bam ${acc}_fixmate.bam
 	samtools index ${acc}.bam
 done
 ```
+
+`samtools sort` uses about 768 MB of memory per thread by default, which is why this asks for more memory than `bwa` alone would need. See [UNIX IV](../UNIX/03_Advanced_UNIX_DataProcessing) for how to choose `-c`, `--mem` and `--time`.
 
 ## samtools
 
@@ -107,14 +120,20 @@ There are many standardized SNP calling pipelines. [GATK](https://software.broad
 [Workflows from the htslib](http://www.htslib.org/workflow/)
 
 ```bash
-#!/usr/bin/bash -l
-#SBATCH -p short -N 1 -n 1 -c 4 --mem 16gb
+#!/bin/bash -l
+#SBATCH -p short -N 1 -n 1 -c 4 --mem 16gb --time 2:00:00
+#SBATCH -J bcftools_call
+#SBATCH -o logs/%x.%j.log
 module load samtools
 module load bcftools
+
+set -euo pipefail
+CPU=${SLURM_CPUS_PER_TASK:-1}
 GENOME=S_enterica_CT18.fasta
 
 # need to make a string which is all the bam files you want to process
 # but if we do *.bam it will catch the intermediate bam files that are in the folder
+m=""
 for a in $(cat acc.txt)
 do
   m="$a.bam $m"
@@ -122,11 +141,12 @@ done
 
 VCF=Salmonella.vcf.gz
 VCFFILTER=Salmonella.filtered.vcf.gz
-bcftools mpileup -Ou -f $GENOME $m | bcftools call -vmO z -o $VCF
+bcftools mpileup -Ou -f $GENOME $m | bcftools call --threads $CPU -vmO z -o $VCF
 tabix -p vcf $VCF
 bcftools stats -F $GENOME -s - $VCF > $VCF.stats
 mkdir -p plots
-plot-vcfstats -p plots/ $VCF.stats
+# plot-vcfstats needs python3 with matplotlib; don't stop the job if it fails
+plot-vcfstats -p plots/ $VCF.stats || echo "plot-vcfstats failed - skipping the plots"
 bcftools filter -O z -o $VCFFILTER -s LOWQUAL -i'%QUAL>10' $VCF
 ```
 

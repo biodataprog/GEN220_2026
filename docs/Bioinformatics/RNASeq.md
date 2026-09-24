@@ -115,18 +115,26 @@ Optional arguments:
 Note this won't quite work to copy and paste.
 
 ```bash
-#!/usr/bin/bash
+#!/bin/bash -l
+#SBATCH -p short -N 1 -n 1 -c 8 --mem 8G --time 2:00:00
+#SBATCH -J kallisto
+#SBATCH -o logs/%x.%j.log
 
 module load kallisto
-ln -s /bigdata/gen220/shared/data-examples/rnaseq/kallisto/S_cerevisiae_ORFs.fasta
-ln -s
+
+set -euo pipefail
+CPU=${SLURM_CPUS_PER_TASK:-1}
+ln -sf /bigdata/gen220/shared/data-examples/rnaseq/kallisto/S_cerevisiae_ORFs.fasta .
+# you also need the reads in data/ and a samples.tsv file (ACC COND REP on each line)
 kallisto index -i Scer.idx S_cerevisiae_ORFs.fasta
 cat samples.tsv | while read ACC COND REP
 do
  OUT=output/$COND.$REP
- kallisto quant -t 8 --single -l 300 -s 20 -i Scer.idx -o $OUT data/${ACC}_1.fastq.gz
+ kallisto quant -t $CPU --single -l 300 -s 20 -i Scer.idx -o $OUT data/${ACC}_1.fastq.gz
 done
 ```
+
+Save it as e.g. `run_kallisto.sh`, run `mkdir -p logs`, then `sbatch run_kallisto.sh`. See [UNIX IV](../UNIX/03_Advanced_UNIX_DataProcessing) for how to choose `-c`, `--mem` and `--time`.
 
 Go see `/bigdata/gen220/shared/data-examples/rnaseq/kallisto`
 
@@ -138,9 +146,17 @@ See also
 [Trinity Assembler](http://trinityrnaseq.github.io/) for RNASeq
 
 ```bash
+#!/bin/bash -l
+#SBATCH -p epyc -N 1 -n 1 -c 8 --mem 32G --time 1-00:00:00
+#SBATCH -J trinity
+#SBATCH -o logs/%x.%j.log
+
 module load trinity-rnaseq
-module switch perl/5.22.0
-Trinity --seqType fq --left reads_1.fq --right reads_2.fq --CPU 8 --max_memory 20G
+
+set -euo pipefail
+CPU=${SLURM_CPUS_PER_TASK:-1}
+# --max_memory is for Trinity's k-mer counting step; keep it below --mem
+Trinity --seqType fq --left reads_1.fq --right reads_2.fq --CPU $CPU --max_memory 20G
 ```
 
 ## ORF identification
@@ -167,8 +183,9 @@ Download those files.
 
 ```bash
 # start an interactive session
-srun -N 1 -n 4 -p short --mem 16gb --pty bash -l
+srun -p short -N 1 -n 1 -c 4 --mem 16gb --time 2:00:00 --pty bash -l
 
+CPU=${SLURM_CPUS_PER_TASK:-1}
 module load hisat2
 # uncompress
 gunzip S_cerevisiae.gff3.gz S_cerevisiae.fasta.gz
@@ -176,12 +193,12 @@ gunzip S_cerevisiae.gff3.gz S_cerevisiae.fasta.gz
 hisat2-build S_cerevisiae.fasta yeast
 # run search
 ln -s /bigdata/gen220/shared/data-examples/rnaseq/yeast_rnaseq/*.gz .
-hisat2  -x yeast -1 SRR3396381_1.fastq.gz -2 SRR3396381_2.fastq.gz -S SRR3396381.sam -p 4
+hisat2  -x yeast -1 SRR3396381_1.fastq.gz -2 SRR3396381_2.fastq.gz -S SRR3396381.sam -p $CPU
 
 module load samtools
-samtools view -b -o SRR3396381.bam SRR3396381.sam
+samtools view --threads $CPU -b -o SRR3396381.bam SRR3396381.sam
 
-samtools sort  -o SRR3396381.sort.bam SRR3396381.bam
+samtools sort --threads $CPU -o SRR3396381.sort.bam SRR3396381.bam
 samtools index SRR3396381.sort.bam
 samtools flagstat SRR3396381.sort.bam
 ```
@@ -192,12 +209,12 @@ Subread - [http://subread.sourceforge.net/](http://subread.sourceforge.net)
 
 ```bash
 module load subread
-CPUS=4
+CPU=${SLURM_CPUS_PER_TASK:-1}
 GENOME=S_cerevisiae.fasta
 GFF=S_cerevisiae.gff3
 OUTFILE=SRR3396381.tab
 INFILE=SRR3396381.sort.bam
-featureCounts -g gene_id -T $CPUS -G $GENOME -s 0 -a $GFF -o $OUTFILE \
+featureCounts -g gene_id -T $CPU -G $GENOME -s 0 -a $GFF -o $OUTFILE \
 -F GTF $INFILE
 ```
 

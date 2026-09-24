@@ -37,7 +37,7 @@ On the HPCC cluster, see which Python / conda modules are available and load one
 module avail python
 module avail miniconda
 module load miniconda3
-conda activate GEN220      # or whatever you named your environment
+conda activate gen220      # the class environment (see Python IV), or your own
 python -c "import matplotlib, seaborn, pandas; print('ok')"
 ```
 

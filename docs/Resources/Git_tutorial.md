@@ -138,7 +138,7 @@ If you clone with an `https://` URL and haven't set up `gh`, `git push` asks for
 3. Set an **expiration date**, generate it, and copy it right away (GitHub shows it only once).
 4. When `git push` asks for a password, paste the token.
 
-To avoid pasting it every time, let git remember it (`git config --global credential.helper osxkeychain` on a Mac, `store` on Linux, which saves it in a plain text file - acceptable on your own account, but `gh` or SSH is better). Never write a token into a script or any file in a repository.
+To avoid pasting it every time, let git remember it: `git config --global credential.helper "cache --timeout=28800"` keeps it in memory for 8 hours (works on the cluster, nothing saved to disk), or save it permanently (`git config --global credential.helper osxkeychain` on a Mac, `store` on Linux, which saves it in a plain text file - acceptable on your own account, but `gh` or SSH is better). Never write a token into a script or any file in a repository.
 
 ### Which URL is my repository using?
 
@@ -186,7 +186,7 @@ Write commit messages that say **what and why** ("Fix off-by-one error in exon l
 
 ### Recipe A: get your homework repository (GitHub Classroom)
 
-1. Click the assignment link from Canvas and **Accept** it. GitHub Classroom creates a repository for you, e.g. `biodataprog/2026-hw1-YOURGITHUBID`.
+1. Click the assignment link from Canvas and **Accept** it. GitHub Classroom creates a repository for you, e.g. `biodataprog/2026-hw1-YOURGITHUBID`. The first time, Classroom asks you to pick your name from the class roster - this links your GitHub account to your UCR identity so the instructor knows whose homework is whose. Pick carefully, and ask the instructor if your name is missing.
 2. On that repository's page click the green **Code** button and copy the URL (SSH tab if you set up a key, otherwise HTTPS).
 3. Clone it where you want to work:
 
@@ -347,7 +347,7 @@ git log --oneline
 
 The short codes (`9ac88eb`) identify commits; you can use them in other commands, e.g. `git show 85a91c8`. On GitHub, the **History** or **commits** link on a repository shows the same thing.
 
-## What not to commit: .gitignore
+## What not to commit: .gitignore {#what-not-to-commit-gitignore}
 
 Git is for **code, documentation, and small files**. Don't commit:
 

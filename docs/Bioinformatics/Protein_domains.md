@@ -31,11 +31,18 @@ Searching with [Interpro](https://www.ebi.ac.uk/interpro/search/)
 Note this can be slow.
 
 ```bash
-#SBATCH -p batch -N 1 -n 8
+#!/bin/bash -l
+#SBATCH -p epyc -N 1 -n 1 -c 8 --mem 16G --time 24:00:00
+#SBATCH -J iprscan
+#SBATCH -o logs/%x.%j.log
 module load iprscan
-CPU=4
+
+set -euo pipefail
+CPU=${SLURM_CPUS_PER_TASK:-1}
 interproscan.sh  --goterms --pathways -f tsv -i PROTEINFILE.fa --cpu $CPU > SEARCH.log
 ```
+
+Run `mkdir -p logs` before submitting. See [UNIX IV](../UNIX/03_Advanced_UNIX_DataProcessing) for how to choose `-c`, `--mem` and `--time`.
 
 The results will contain information like
 
@@ -44,10 +51,12 @@ Gene Ontology [http://geneontology.org/](http://geneontology.org/)
 # Running Analyses on Biocluster
 
 ```bash
+# in a job script or an srun session with -c 4 (or more)
 module load hmmer
 module load db-pfam
-hmmscan --domtblout domtbl_results.out $PFAM_DB/Pfam-A.hmm proteins.fa > proteins.hmmscan
-hmmsearch --domtblout hmmsearch_domtbl_results.out $HMM protein-db.fa > protein.hmmsearch
+CPU=${SLURM_CPUS_PER_TASK:-1}
+hmmscan --cpu $CPU --domtblout domtbl_results.out $PFAM_DB/Pfam-A.hmm proteins.fa > proteins.hmmscan
+hmmsearch --cpu $CPU --domtblout hmmsearch_domtbl_results.out $HMM protein-db.fa > protein.hmmsearch
 ```
 
 Pfam2GO - [http://current.geneontology.org/ontology/external2go/pfam2go](http://current.geneontology.org/ontology/external2go/pfam2go)

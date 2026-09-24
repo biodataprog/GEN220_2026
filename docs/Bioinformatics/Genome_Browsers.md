@@ -52,7 +52,7 @@ The next directions are specific to the UCR HPCC. These instructions use an alre
 
 ```bash
 # startup an interactive job on the cluster
-srun -p short -N 1 -n 4 --mem 16gb --pty bash -l
+srun -p short -N 1 -n 1 -c 4 --mem 16gb --time 2:00:00 --pty bash -l
 mkdir -p ~/bigdata/jbrowse2
 cd ~/.html/private
 ln -s ~/bigdata/jbrowse2 .

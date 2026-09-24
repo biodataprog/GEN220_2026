@@ -357,28 +357,32 @@ picked out from other analyses
 This is a script. e.g. `run_blast.sh`
 
 ```bash
-#!/usr/bin/bash
-#SBATCH -p short --nodes 1 --ntasks 4 --mem 2G --job-name=BLASTN
-#SBATCH --output=blastn.%A.log
-module load ncbi-blast/2.9.0+
+#!/bin/bash -l
+#SBATCH -p short -N 1 -n 1 -c 4 --mem 2G --time 1:00:00
+#SBATCH -J BLASTN
+#SBATCH -o logs/%x.%j.log
 
-CPUS=$SLURM_CPUS_ON_NODE
-if [ ! $CPUS ]; then
-    CPUS=1
-fi
+module load ncbi-blast
+
+set -euo pipefail
+
+CPU=${SLURM_CPUS_PER_TASK:-1}
 if [ ! -f C_glabrata_ORFs.fasta.nhr ]; then
   makeblastdb -in C_glabrata_ORFs.fasta -dbtype nucl
 fi
 blastn -query Yeast_chr2_ORFs.fa -db C_glabrata_ORFs.fasta \
--evalue 1e-5 -outfmt 6 -out yeastORF-vs-CglabrataORF.BLASTN.tab -num_threads $CPUS
+-evalue 1e-5 -outfmt 6 -out yeastORF-vs-CglabrataORF.BLASTN.tab -num_threads $CPU
 ```
 
-Now submit this script
+Now submit this script (the `logs` folder must exist before the job starts)
 
 ```bash
+mkdir -p logs
 sbatch run_blast.sh
 squeue -u $USER # check on your submitted job
 ```
+
+See [UNIX IV](../UNIX/03_Advanced_UNIX_DataProcessing) for how to choose `-c`, `--mem` and `--time`.
 
 ## Other types of search tools
 
@@ -432,14 +436,20 @@ The International Nucleotide Sequence Database Collaboration ([INSDC](http://www
 On HPCC there are already databases installed and indexed for BLAST searches.
 
 ```bash
-#SBATCH -N 1 -n 16
+#!/bin/bash -l
+#SBATCH -p epyc -N 1 -n 1 -c 16 --mem 32G --time 2-00:00:00
+#SBATCH -J blastp_nr
+#SBATCH -o logs/%x.%j.log
 module load db-ncbi
 module load ncbi-blast
 # loads the current ncbi folder as env variables
 # $BLASTDB and $NCBI_DB
 # after loading this you can run blast without specifying
 # the location of the databases
-blastp -db nr -query seqs.fasta -out seqs-nr.blastp -num_threads 16 -evalue 1e-5
+
+set -euo pipefail
+CPU=${SLURM_CPUS_PER_TASK:-1}
+blastp -db nr -query seqs.fasta -out seqs-nr.blastp -num_threads $CPU -evalue 1e-5
 ```
 
 ### FTP / Web downloads
@@ -482,29 +492,41 @@ The easiest way to download from SRA is using the parallel fastq-dump tool. This
 You can use this for a single SRA accession. Here's an example one https://www.ncbi.nlm.nih.gov/sra/?term=SRR649944.
 
 ```bash
-#SBATCH -p short -N 1 -c 32 --mem 16gb
+#!/bin/bash -l
+#SBATCH -p short -N 1 -n 1 -c 8 --mem 16gb --time 2:00:00
+#SBATCH -J fastqdump
+#SBATCH -o logs/%x.%j.log
 module load parallel-fastq-dump
-CPU=${SLURM_CPUS_ON_NODE:-1}
+
+set -euo pipefail
+CPU=${SLURM_CPUS_PER_TASK:-1}
 OUTDIR=data/sra
 mkdir -p $OUTDIR
 SRARUN=SRR649944 # this is a small example accession
 
-parallel-fastq-dump --tmpdir $SCRATCH --gzip  --sra-id $SRARUN --threads $CPU -O $OUTDIR/$SRARUN --split-files
+parallel-fastq-dump --tmpdir "${SCRATCH:-/tmp}" --gzip  --sra-id $SRARUN --threads $CPU -O $OUTDIR/$SRARUN --split-files
 ```
 
 If you wanted to run this on a file with multiple accessions
 
 ```bash
-#SBATCH -p short -N 1 -c 32 --mem 16gb
+#!/bin/bash -l
+#SBATCH -p epyc -N 1 -n 1 -c 8 --mem 16gb --time 12:00:00
+#SBATCH -J fastqdump
+#SBATCH -o logs/%x.%j.log
 module load parallel-fastq-dump
-CPU=${SLURM_CPUS_ON_NODE:-1}
+
+set -euo pipefail
+CPU=${SLURM_CPUS_PER_TASK:-1}
 OUTDIR=data/sra
 SAMPLEFILE=sra.txt
 mkdir -p $OUTDIR
 while read SRARUN; do
-  parallel-fastq-dump --tmpdir $SCRATCH --gzip  --sra-id $SRARUN --threads $CPU -O $OUTDIR/$SRARUN --split-files
+  parallel-fastq-dump --tmpdir "${SCRATCH:-/tmp}" --gzip  --sra-id $SRARUN --threads $CPU -O $OUTDIR/$SRARUN --split-files
 done < $SAMPLEFILE
 ```
+
+Run `mkdir -p logs` before submitting either script. With many accessions it is faster to run one accession per task of a job array, as in [UNIX IV](../UNIX/03_Advanced_UNIX_DataProcessing).
 
 ## Downloading sequence records from GenBank
 
@@ -623,7 +645,6 @@ cat list_of_ids | cdbyank database.fasta.cidx > retrieved.fa
 Samtools provides indexing and retrieval of FASTA
 
 ```bash
-#SBATCH -p short -N 1 -n 4
 module load samtools
 
 # index file
@@ -746,10 +767,16 @@ Samtools provides indexing and retrieval of FASTQ Files.
 If the file is compressed (.gz) it must be compressed with the bgzip tool - which is part of the htslib package. So if the file exists already as a compressed file you need to uncompress and recompress with bgzip.
 
 ```bash
-#SBATCH -p short -N 1 -n 4
+#!/bin/bash -l
+#SBATCH -p short -N 1 -n 1 -c 4 --mem 4G --time 1:00:00
+#SBATCH -J bgzip
+#SBATCH -o logs/%x.%j.log
 module load samtools
-pigz -d READFILE.fq.gz
-bgzip --threads 4 READFILE.fq
+
+set -euo pipefail
+CPU=${SLURM_CPUS_PER_TASK:-1}
+pigz -p $CPU -d READFILE.fq.gz
+bgzip --threads $CPU READFILE.fq
 
 # now index
 samtools fqidx READFILE.fq.gz

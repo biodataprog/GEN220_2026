@@ -17,7 +17,7 @@ Every script below is complete: save it with the file name given, put it in the 
 You need Biopython, SciPy and matplotlib (NumPy comes along with them). On the HPCC, start an interactive job first rather than running on the login node:
 
 ```bash
-srun -N 1 -n 1 --mem 4gb --time 2:00:00 --pty bash -l
+srun -p short -N 1 -n 1 -c 1 --mem 4gb --time 2:00:00 --pty bash -l
 # e.g. in a conda environment or with pip
 pip install biopython scipy matplotlib
 mkdir -p ~/bigdata/snp_workshop/salmonella
