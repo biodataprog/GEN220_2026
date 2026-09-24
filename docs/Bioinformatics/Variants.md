@@ -39,7 +39,7 @@ bcftools filter -O z -o $VCFFILTER -s LOWQUAL -i'%QUAL>10' $VCF
 
 ## Advanced - GATK variant calling
 
-An existing framework that works can be checked out from [https://github.com/biodataprog/GEN220_2022_examples](https://github.com/biodataprog/GEN220_2022_examples) see the Variants folder.
+An existing framework that works can be checked out from the class examples repository [https://github.com/biodataprog/GEN220_2026_examples](https://github.com/biodataprog/GEN220_2026_examples) - see the `Variants` folder (the `bcftools` script above is in `Variants/bcftools/`).
 
 Make sure you are running this in ~/bigdata or somewhere with enough space as this will generate large files.
 The job scripts write their logs to `logs/`, so run `mkdir -p logs` in the `Variants` folder before submitting anything.
@@ -48,13 +48,20 @@ The pipeline scripts shown below test for unset variables and missing files them
 
 The first script `pipeline_GATK/00_index.sh` will download the genome, index and download the fastq files from NCBI SRA. If you had different datasets you would develop your own data files and script.
 
-You don't need to copy this code - do the git checkout (eg `cd ~/bigdata; git clone https://github.com/biodataprog/GEN220_2022_examples; cd GEN220_2022_examples/Variants`) and then you can run these steps.
+You don't need to copy this code - do the git checkout and then you can run these steps:
+
+```bash
+cd ~/bigdata/gen220
+git clone https://github.com/biodataprog/GEN220_2026_examples.git   # or: cd GEN220_2026_examples; git pull
+cd GEN220_2026_examples/Variants
+mkdir -p logs
+```
 
 This has a configuration file which defines some variables used by the pipeline.
 
 ```bash
 GENOMEFOLDER=genome
-REFGENOME=genome/FungiDB-39_AfumigatusAf293_Genome.fasta
+REFGENOME=genome/Af293_ASM265v1.fasta
 GENOMENAME=Af293
 SAMPFILE=samples.csv
 FASTQFOLDER=input
@@ -80,8 +87,8 @@ REFNAME=AF293-REF
 SLICEVCF=vcf_slice
 SNPEFFOUT=snpEff
 snpEffConfig=snpEff.config
-SNPEFFGENOME=AfumigatusAf293_FungiDB
-GFFGENOME=FungiDB-49_AfumigatusAf293.gff
+SNPEFFGENOME=AfumigatusAf293_NCBI
+GFFGENOME=Af293_ASM265v1.gff
 ```
 
 You can customize that as you need for your own data.
@@ -114,25 +121,19 @@ if [ -f config.txt ]; then
 fi
 mkdir -p $FASTQFOLDER $GENOMEFOLDER
 pushd $GENOMEFOLDER
-# THIS IS EXAMPLE CODE FOR HOW TO DOWNLOAD DIRECT FROM FUNGIDB
-RELEASE=49
-SPECIES=AfumigatusAf293
-URL=https://fungidb.org/common/downloads/release-${RELEASE}/$SPECIES
-PREF=FungiDB-${RELEASE}_${SPECIES}
-FASTAFILE=${PREF}_Genome.fasta
-DOMAINFILE=${PREF}_InterproDomains.txt
-GFF=${PREF}.gff
-## THIS IS FUNGIDB DOWNLOAD PART
-echo "working off $FASTAFILE - check if these don't match may need to update config/init script"
+# Download the A. fumigatus Af293 genome and annotation from NCBI RefSeq
+# (the same Af293 assembly FungiDB used; FungiDB download links no longer work)
+ACC=GCF_000002655.1_ASM265v1
+URL=https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/002/655/$ACC
+FASTAFILE=$(basename $REFGENOME)
+GFF=$GFFGENOME
+echo "working off $FASTAFILE - check these match REFGENOME and GFFGENOME in config.txt"
 
-if [ ! -f $DOMAINFILE ]; then
-	curl -O $URL/txt/$DOMAINFILE
-fi
 if [ ! -f $FASTAFILE ] ; then
-	curl -O $URL/fasta/data/$FASTAFILE
+	curl -L $URL/${ACC}_genomic.fna.gz | gunzip -c > $FASTAFILE
 fi
 if [ ! -f $GFF ]; then
-	curl -O $URL/gff/data/$GFF
+	curl -L $URL/${ACC}_genomic.gff.gz | gunzip -c > $GFF
 fi
 
 if [[ ! -f $FASTAFILE.fai || $FASTAFILE -nt $FASTAFILE.fai ]]; then
@@ -205,7 +206,7 @@ fi
 if [ ! -f $REFGENOME.dict ]; then
   echo "NEED a $REFGENOME.dict - make sure 00_index.sh is run"
 fi
-mkdir -p $TMPOUTDIR $ALNFOLDER
+mkdir -p $TMPOUTDIR $ALNFOLDER $TEMP $UNMAPPED
 
 CPU=${SLURM_CPUS_PER_TASK:-1}
 N=${SLURM_ARRAY_TASK_ID:-$1}
@@ -362,8 +363,8 @@ date
 If your genome is fragmented you will want to adjust the parameter in `config.txt` file so that `GVCF_INTERVAL=1` is more like 5 or 10 and then adjust your job number by that factor. Eg if you have 1000 contigs and `GVCF_INTERVAL=5` then you would want to run array jobs with 1000/5 = 200 instead of 1000 jobs.
 
 ```bash
-# 9 tasks = the 9 sequences in the A. fumigatus genome (with GVCF_INTERVAL=1)
-sbatch --array=1-9 pipeline_GATK/03_jointGVCF_call_slice.sh
+# 8 tasks = the 8 chromosomes in the NCBI A. fumigatus Af293 genome (with GVCF_INTERVAL=1)
+sbatch --array=1-8 pipeline_GATK/03_jointGVCF_call_slice.sh
 ```
 
 Here is the Code
@@ -560,8 +561,7 @@ module load snpEff
 module load bcftools
 module load tabix
 # THIS IS AN EXAMPLE OF HOW TO MAKE SNPEFF - it is for A.fumigatus
-SNPEFFGENOME=AfumigatusAf293_FungiDB_39
-GFFGENOME=$SNPEFFGENOME.gff
+# SNPEFFGENOME and GFFGENOME come from config.txt
 
 MEM=64g
 
@@ -570,7 +570,6 @@ if [ -f config.txt ]; then
 	source config.txt
 fi
 GFFGENOMEFILE=$GENOMEFOLDER/$GFFGENOME
-FASTAGENOMEFILE=$GENOMEFOLDER/$GENOMEFASTA
 if [ -z $SNPEFFJAR ]; then
  echo "need to defined \$SNPEFFJAR in module or config.txt"
  exit
@@ -590,13 +589,14 @@ mkdir -p $SNPEFFOUT
 ## NOTE YOU WILL NEED TO FIX THIS FOR YOUR CUSTOM GENOME
 if [ ! -e $SNPEFFOUT/$snpEffConfig ]; then
 	rsync -a $SNPEFFDIR/snpEff.config $SNPEFFOUT/$snpEffConfig
-	echo "# AfumAf293.fungidb " >> $SNPEFFOUT/$snpEffConfig
-	# CHANGE Aspergillus fumigatus Af293 FungiDB to your genome name and source - though this is really not important - $SNPEFFGENOME.genome is really what is used
-  	echo "$SNPEFFGENOME.genome : Aspergillus fumigatus Af293 FungiDB" >> $SNPEFFOUT/$snpEffConfig
+	echo "# AfumAf293.ncbi " >> $SNPEFFOUT/$snpEffConfig
+	# CHANGE this to your genome name and source - though this is really not important - $SNPEFFGENOME.genome is really what is used
+	echo "$SNPEFFGENOME.genome : Aspergillus fumigatus Af293 NCBI RefSeq" >> $SNPEFFOUT/$snpEffConfig
 	chroms=$(grep '##sequence-region' $GFFGENOMEFILE | awk '{print $2}' | perl -p -e 's/\n/, /' | perl -p -e 's/,\s+$/\n/')
 	echo -e "\t$SNPEFFGENOME.chromosomes: $chroms" >> $SNPEFFOUT/$snpEffConfig
-	# THIS WOULD NEED SPECIFIC FIX BY USER - IN A.fumigatus the MT contig is called mito_A_fumigatus_Af293
-	echo -e "\t$SNPEFFGENOME.mito_A_fumigatus_Af293.codonTable : Mold_Mitochondrial" >> $SNPEFFOUT/$snpEffConfig
+	# If your genome has a mitochondrial contig, give it the right codon table, e.g.
+	# echo -e "\t$SNPEFFGENOME.MITO_CONTIG_NAME.codonTable : Mold_Mitochondrial" >> $SNPEFFOUT/$snpEffConfig
+	# (the NCBI RefSeq Af293 assembly has only the 8 nuclear chromosomes)
 	mkdir -p $SNPEFFOUT/data/$SNPEFFGENOME
 	gzip -c $GFFGENOMEFILE > $SNPEFFOUT/data/$SNPEFFGENOME/genes.gff.gz
 	rsync -aL $REFGENOME $SNPEFFOUT/data/$SNPEFFGENOME/sequences.fa
@@ -626,10 +626,10 @@ java -Xmx$MEM -jar $SNPEFFJAR eff -dataDir `pwd`/data -v $SNPEFFGENOME $INVCF > 
 
 bcftools query -H -f '%CHROM\t%POS\t%REF\t%ALT{0}[\t%TGT]\t%INFO/ANN\n' $OUTVCF > $OUTTAB
 
-# this requires python3 and vcf script
-# this assumes the interpro domains were downloaded from FungiDB and their format - you will need to generalize this
-../scripts/map_snpEff2domains.py --vcf $OUTVCF --domains ../genome/${SNPEFFGENOME}_InterproDomains.txt --output $DOMAINVAR
-
-# this requires Python and the vcf library to be installed - should be in the miniconda3 env but if not need to check again
-../scripts/snpEff_2_tab.py $OUTVCF > $OUTMATRIX
+# Optional extra steps from the original research pipeline (helper scripts not included here):
+# map variants onto InterPro protein domains, and make a gene x strain matrix
+# ../scripts/map_snpEff2domains.py --vcf $OUTVCF --domains DOMAINS.txt --output $DOMAINVAR
+# ../scripts/snpEff_2_tab.py $OUTVCF > $OUTMATRIX
+# The $OUTTAB table from bcftools query above has the same information; the
+# SNP workshop (Workshop_SNPs) shows how to summarize tables like it in Python.
 ```

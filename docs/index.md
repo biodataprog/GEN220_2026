@@ -3,11 +3,11 @@
 See the [Syllabus](Resources/Syllabus) [PDF](Resources/Syllabus.pdf)
 for an overview of lecture topics.
 
-Examples worked during class will be uploaded in [this working repository](https://github.com/biodataprog/GEN220_2026_classexamples).
+Examples worked during class will be uploaded in [this working repository](https://github.com/biodataprog/GEN220_2026_examples).
 To check it out and keep it update.
 ```
-git clone https://github.com/biodataprog/GEN220_2026_classexamples.git
-cd GEN220_2026_classexamples
+git clone https://github.com/biodataprog/GEN220_2026_examples.git
+cd GEN220_2026_examples
 # ... time passes, new examples are uploaded
 git pull # to get the latest version of the files
 
