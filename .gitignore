@@ -216,3 +216,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+.DS_Store
+act
+
+# local Jekyll preview
+docs/Gemfile
+docs/Gemfile.lock
+docs/_site/
+docs/.jekyll-cache/

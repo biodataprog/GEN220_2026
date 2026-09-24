@@ -1,0 +1,117 @@
+title: "GEN220: High Throughput Biological Data Analysis"
+description: "UC Riverside GEN220 - Fall 2026. UNIX, Python, and bioinformatics for high throughput biological data."
+
+remote_theme: just-the-docs/just-the-docs@v0.12.0
+color_scheme: light
+
+plugins:
+  - jekyll-remote-theme
+  - jekyll-optional-front-matter
+  - jekyll-titles-from-headings
+  - jekyll-relative-links
+  - jekyll-default-layout
+
+# pages without front matter get their title from the first heading
+titles_from_headings:
+  enabled: true
+  strip_title: false
+  collections: false
+
+relative_links:
+  enabled: true
+  collections: false
+
+search_enabled: true
+heading_anchors: true
+back_to_top: true
+back_to_top_text: "Back to top"
+
+aux_links:
+  "Course repo on GitHub":
+    - "https://github.com/biodataprog/GEN220_2026"
+  "Class examples":
+    - "https://github.com/biodataprog/GEN220_2026_classexamples"
+aux_links_new_tab: true
+
+gh_edit_link: true
+gh_edit_link_text: "Edit this page on GitHub"
+gh_edit_repository: "https://github.com/biodataprog/GEN220_2026"
+gh_edit_branch: "main"
+gh_edit_source: docs
+gh_edit_view_mode: "tree"
+
+footer_content: "GEN220 Fall 2026 &middot; UC Riverside &middot; Jason Stajich"
+
+exclude:
+  - Makefile
+  - "*/Makefile"
+  - metadata.yaml
+  - "*/metadata.yaml"
+
+# Sidebar navigation. Lecture files have no front matter (so pandoc PDFs
+# stay clean); their section (parent) and ordering are assigned here instead.
+# New lecture? Add a line for it below or it will not appear in the sidebar.
+defaults:
+  - scope: { path: "" }
+    values: { layout: default }
+  - scope: { path: "Assignments/hide" }
+    values: { nav_exclude: true, search_exclude: true }
+  - scope: { path: "01_Intro_Command_Line.md" }
+    values: { nav_exclude: true }
+
+  # Section landing pages (top level of the sidebar)
+  - { scope: { path: "index.md" }, values: { title: Home, nav_order: 1 } }
+  - { scope: { path: "UNIX/index.md" }, values: { title: UNIX, has_children: true, nav_order: 2 } }
+  - { scope: { path: "Python/index.md" }, values: { title: Python, has_children: true, nav_order: 3 } }
+  - { scope: { path: "Bioinformatics/index.md" }, values: { title: Bioinformatics, has_children: true, nav_order: 4 } }
+  - { scope: { path: "Misc/index.md" }, values: { title: Other Skills and Tools, has_children: true, nav_order: 5 } }
+  - { scope: { path: "Assignments/index.md" }, values: { title: Assignments, has_children: true, nav_order: 6 } }
+  - { scope: { path: "Resources/index.md" }, values: { title: Resources, has_children: true, nav_order: 7 } }
+
+  # UNIX
+  - { scope: { path: "UNIX/00_Login_Notebook.md" }, values: { title: "Course Intro / UNIX I: Cmdline", parent: UNIX, nav_order: 1 } }
+  - { scope: { path: "UNIX/01_Tools.md" }, values: { title: "UNIX: Running Tools", parent: UNIX, nav_order: 2 } }
+  - { scope: { path: "UNIX/02_Analysis_summary.md" }, values: { title: "UNIX: Analysis and Programming", parent: UNIX, nav_order: 3 } }
+  - { scope: { path: "UNIX/03_Advanced_UNIX_DataProcessing.md" }, values: { title: "UNIX: Misc Tricks", parent: UNIX, nav_order: 4 } }
+  # Python
+  - { scope: { path: "Python/01_Python_Intro.md" }, values: { title: "Python: Intro", parent: Python, nav_order: 1 } }
+  - { scope: { path: "Python/02_Loops_IO.md" }, values: { title: "Python: Logic, Loops, IO", parent: Python, nav_order: 2 } }
+  - { scope: { path: "Python/03_Dict_Func.md" }, values: { title: "Python: Dictionaries and Functions", parent: Python, nav_order: 3 } }
+  - { scope: { path: "Python/04_Workshop.md" }, values: { title: "Python: Workshop", parent: Python, nav_order: 4 } }
+  - { scope: { path: "Python/05_String_patterns.md" }, values: { title: "Python: Regular Expressions", parent: Python, nav_order: 5 } }
+  - { scope: { path: "Python/06_Packages.md" }, values: { title: "Python: Packages/BioPython", parent: Python, nav_order: 6 } }
+  - { scope: { path: "Python/07_Pandas.md" }, values: { title: "Python: Pandas", parent: Python, nav_order: 7 } }
+  - { scope: { path: "Python/08_Regexp_Worked_examples.md" }, values: { title: "Python: Regexp Worked Examples", parent: Python, nav_order: 8 } }
+  - { scope: { path: "Python/09_Plotting.md" }, values: { title: "Python: Plotting Data", parent: Python, nav_order: 9 } }
+  # Bioinformatics
+  - { scope: { path: "Bioinformatics/Basic_Bioinformatics.md" }, values: { title: "Basics and BLAST", parent: Bioinformatics, nav_order: 1 } }
+  - { scope: { path: "Bioinformatics/Workshop_parsing.md" }, values: { title: "Workshop: Parsing Data", parent: Bioinformatics, nav_order: 2 } }
+  - { scope: { path: "Bioinformatics/Short_read_aligning.md" }, values: { title: "Short Reads", parent: Bioinformatics, nav_order: 3 } }
+  - { scope: { path: "Bioinformatics/Ranges_Features_overlap.md" }, values: { title: "Genomic Data Ranges", parent: Bioinformatics, nav_order: 4 } }
+  - { scope: { path: "Bioinformatics/RNASeq.md" }, values: { title: "RNASeq", parent: Bioinformatics, nav_order: 5 } }
+  - { scope: { path: "Bioinformatics/Variants.md" }, values: { title: "Variation and SNPs", parent: Bioinformatics, nav_order: 6 } }
+  - { scope: { path: "Bioinformatics/Protein_domains.md" }, values: { title: "Protein Domains", parent: Bioinformatics, nav_order: 7 } }
+  - { scope: { path: "Bioinformatics/Orthology.md" }, values: { title: "Orthology", parent: Bioinformatics, nav_order: 8 } }
+  - { scope: { path: "Bioinformatics/Phylogeny_families.md" }, values: { title: "Phylogeny and Gene Families", parent: Bioinformatics, nav_order: 9 } }
+  - { scope: { path: "Bioinformatics/Sequence_evolution.md" }, values: { title: "Sequence Evolution and Statistics", parent: Bioinformatics, nav_order: 10 } }
+  - { scope: { path: "Bioinformatics/Microbiome_data.md" }, values: { title: "Microbiome", parent: Bioinformatics, nav_order: 11 } }
+  - { scope: { path: "Bioinformatics/Genome_Browsers.md" }, values: { title: "Genome Browsers", parent: Bioinformatics, nav_order: 12 } }
+  # Assignments
+  - { scope: { path: "Assignments/HW0.md" }, values: { title: "HW0 - Intro", parent: Assignments, nav_order: 1 } }
+  - { scope: { path: "Assignments/HW1.md" }, values: { title: "HW1 - Unix", parent: Assignments, nav_order: 2 } }
+  - { scope: { path: "Assignments/HW2.md" }, values: { title: "HW2 - Python 1", parent: Assignments, nav_order: 3 } }
+  - { scope: { path: "Assignments/HW3.md" }, values: { title: "HW3 - Python and BLAST", parent: Assignments, nav_order: 4 } }
+  - { scope: { path: "Assignments/HW4.md" }, values: { title: "HW4 - AI Programming", parent: Assignments, nav_order: 5 } }
+  - { scope: { path: "Assignments/HW5.md" }, values: { title: "HW5 - GitHub Website", parent: Assignments, nav_order: 6 } }
+  - { scope: { path: "Assignments/Project_Topics.md" }, values: { title: "Project Topics", parent: Assignments, nav_order: 7 } }
+  - { scope: { path: "Assignments/Project_Ideas.md" }, values: { title: "Project Team Ideas", parent: Assignments, nav_order: 8 } }
+  - { scope: { path: "Assignments/Project_Report_Template.md" }, values: { title: "Project Report Template", parent: Assignments, nav_order: 9 } }
+  - { scope: { path: "Assignments/Project_Presentation.md" }, values: { title: "Project Presentation Info", parent: Assignments, nav_order: 10 } }
+  # Other skills
+  - { scope: { path: "Misc/Rplotting.md" }, values: { title: "Plotting with R and ggplot2", parent: Other Skills and Tools, nav_order: 1 } }
+  - { scope: { path: "Misc/Building_Websites.md" }, values: { title: "Building Websites", parent: Other Skills and Tools, nav_order: 2 } }
+  - { scope: { path: "Misc/SQL_DuckDB.md" }, values: { title: "Tables: CSV, Parquet and SQL with DuckDB", parent: Other Skills and Tools, nav_order: 3 } }
+  # Resources
+  - { scope: { path: "Resources/Syllabus.md" }, values: { title: "Syllabus", parent: Resources, nav_order: 1 } }
+  - { scope: { path: "Resources/Git_tutorial.md" }, values: { title: "Git and GitHub Guide", parent: Resources, nav_order: 2 } }
+  - { scope: { path: "Resources/SSH_keys.md" }, values: { title: "SSH Keys", parent: Resources, nav_order: 3 } }
