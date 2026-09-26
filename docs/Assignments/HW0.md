@@ -2,18 +2,18 @@ Github introduction
 ====
 
 1. Create a Github.com account
-2. Add your account to [google sheet](https://docs.google.com/spreadsheets/d/1yEH8nW_nsp9B72diYqhrTFITQr4c9_qawqEOntAiwzc/edit?gid=0#gid=0)
+2. Add your account to [google sheet](https://docs.google.com/forms/d/1ocUjG5zQbPa7NaPMfT2zADQox_k_3WE6PcAy4Co796A/edit)
 3. read the directions on how to [run visual studio](https://hpcc.ucr.edu/manuals/hpc_cluster/selected_software/vscode/) - this is linked through your github account and allows you to run via the web or have visual studio on your laptop but connect to the hpcc server for file saving and github push/pull/commit commands as well. The goal of homework 1 is for you to practice using these tools even though they are new and maybe a little confusing. You can also just use jupyter notebook for your editing of code if you don't want to try these other things out.
 
 ## There is one homework for you to accept:
 
-1. [github intro](https://classroom.github.com/a/osKeXo8S) - this is to learn and practice about github
+1. [github intro](https://classroom50.org/biodataprog/gen220/assignments/setup-github-and-classroom/submissions) - this is to learn and practice about github
 This is due Oct 1, 2026.
 
 Github practice
 ===
 
-1. From [first link](https://classroom.github.com/a/osKeXo8S) you'll read and follow some of the videos and instructions in the github intro repository.
+1. From [first link](https://classroom50.org/biodataprog/gen220/assignments/setup-github-and-classroom/submissions). You should be able to accept this homework once I have your github account. 
 
 2. Read the [Git and GitHub guide](../Resources/Git_tutorial): do the "One-time setup" and "Logging in" sections, then practice Recipe B.
 
