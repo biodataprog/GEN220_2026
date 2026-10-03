@@ -39,7 +39,7 @@ git clone https://github.com/biodataprog/GEN220_data.git
 # Homework
 
 * HW0 - [Intro](Assignments/HW0) [PDF](Assignments/HW0.pdf)
-* HW1 - [Unix](Assignments/HW1) [PDF](Assignments/HW1.pdf)
+* HW1 - [Unix](Assignments/HW1) [PDF](Assignments/HW1.pdf) - data description: [About the data](Assignments/HW1_data) [PDF](Assignments/HW1_data.pdf)
 * HW2 - [Python 1](Assignments/HW2) [PDF](Assignments/HW2.pdf)
 * HW3 - [Python and BLAST](Assignments/HW3) [PDF](Assignments/HW3.pdf)
 * HW4 - [AI Programming](Assignments/HW4) [PDF](Assignments/HW4.pdf)
