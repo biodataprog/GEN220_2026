@@ -1,48 +1,163 @@
 Homework 2
 ====
 
-Practicing Python
+Practicing Python: strings, lists, and dictionaries
 
-You will accept the homework problem invitation through GitHub Classroom. The link is in canvas.
+You will accept the homework invitation through the GitHub Classroom link in Canvas. This creates a `hw2-python-yourname` repository. Clone it and put each script in the top level of that repository.
 
-This will create a hw2-python-practice-yourname repository. You will clone this repository to your system or open in visual studio
+For every problem, write the functions described below and a short `if __name__ == "__main__":` block that runs them on the example data and prints the results. Your scripts should run with `python3 problemN.py` from the repository directory, and every function should have a one-line docstring.
 
-```bash
-$ git clone git@github.com:biodataprog/hw2-python-practice-YOURNAME.git
-```
+Do not use `pandas`, `Biopython`, or `re` in this assignment. The goal is to practice loops, lists, strings, and dictionaries.
 
-I have created starter scripts for you to update and add the necessary code to solve the problem.
+---
 
-0. Write a UNIX script which has the job of setting up the data. It will be called `setup.sh`
-   a. Have it download the __Thermus aquaticus__ [genome](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_001399775.1/) from NCBI, available at this url: <https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/001/399/775/GCF_001399775.1_ASM139977v1/GCF_001399775.1_ASM139977v1_genomic.fna.gz>
-   b. Have it download the __Bacillus subtilis__ [genome](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000009045.1/) at this url: <https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/009/045/GCF_000009045.1_ASM904v1/GCF_000009045.1_ASM904v1_genomic.fna.gz>
-   c. uncompress the files
+## Problem 1: Iterating on a string (`problem1.py`)
 
-1. Write a python script called 'problem1.py' 
-   
-    a. Have your python script calculate the percent GC (number of G and C bases in the sequence file divided by the total length of the sequence) content of the two files downloaded above. Print out the GC percentage for each of the files.
+A DNA sequence is a string. In this problem you will loop over its characters.
 
-    **Bonus** - make the script more generic to print out filename and GC content for any set of files passed in on the command line 
+a. Write `count_bases(seq)`. It loops over every character in `seq` and returns a dictionary with the counts of `A`, `C`, `G`, and `T`.
 
-2. Write a script called 'problem2.py' reads in file sequences.txt. 
-   
-    a. It has several columns, have it print out a new report to STDOUT with three columns:
-   GeneID, gene length (gDNA column), mRNA length
-
-    **Bonus:** print the data sorted so the longest gene (gDNA) comes first and smallest is last.
-   
-3. Write a script called 'problem3.py' reads in file sequences.txt. 
-   
-    a. Generate a summary table of statistics about gene length - what is the average length, longest and shortest genes
-
-    b. have the script create file that contains a summary of gene sizes binned by 500bp. Say there were 4 genes in the file of lengths 1100, 750, 1800, 950.
-    You print out the following to a file called 'lengths_binned.csv'
-
-    ```text
-    bin_size,count
-    0,0
-    500,2
-    1000,1
-    1500,1
+    ```python
+    >>> count_bases("ATGGCGTACGTTAGC")
+    {'A': 3, 'C': 3, 'G': 5, 'T': 4}
     ```
 
+    Make the function work for lower-case input too (`"atgg"` should count the same as `"ATGG"`).
+
+b. Write `reverse_complement(seq)`. It returns the reverse complement of the sequence. A -> T, T -> A, G -> C, C -> G, read from the end of the string toward the start.
+
+    ```python
+    >>> reverse_complement("ATGGCGTACGTTAGC")
+    'GCTAACGTACGCCAT'
+    ```
+
+c. Write `find_motif_positions(seq, motif)`. It returns a list of **1-based** start positions where `motif` occurs in `seq`. Count overlapping matches. Use a loop over the start positions, not `str.find` or `str.count`.
+
+    ```python
+    >>> find_motif_positions("ATATATA", "ATA")
+    [1, 3, 5]
+    >>> find_motif_positions("ATGCCC", "TTT")
+    []
+    ```
+
+d. Write `gc_windows(seq, window)`. For every window of length `window` (sliding one base at a time), return the fraction of bases that are G or C. Return a list of floats with one value per window.
+
+    ```python
+    >>> gc_windows("GGCCAATT", 4)
+    [1.0, 0.75, 0.5, 0.25, 0.0]
+    ```
+
+    **Bonus:** Write `split_codons(seq)`. It returns a list of consecutive 3-letter codons. Ignore any incomplete codon at the end.
+
+    ```python
+    >>> split_codons("ATGGCGTACG")
+    ['ATG', 'GCG', 'TAC']
+    ```
+
+---
+
+## Problem 2: Iterating on a list, finding and counting (`problem2.py`)
+
+The file `gene_lengths.txt` contains one gene length (in bp) per line. Create this file in your repository with these eight values:
+
+```text
+1100
+750
+1800
+950
+1500
+620
+2400
+880
+```
+
+Your script reads the file into a list of integers (write `read_lengths(filename)` for this). Then write the following functions.
+
+a. `count_above(values, cutoff)`. Returns how many values are strictly greater than `cutoff`.
+
+    ```python
+    >>> count_above(lengths, 1000)
+    4
+    ```
+
+---
+
+## Problem 3: Merging two datasets with a dictionary (`problem3.py`)
+
+Two tab-separated files describe the same set of genes. Create them in your repository, using real tab characters between columns.
+
+`annotations.tsv`
+
+```text
+gene_id	chrom	product
+g001	chr1	DNA polymerase
+g002	chr1	ribosomal protein L2
+g003	chr2	ATP synthase subunit a
+g004	chr2	hypothetical protein
+g005	chr3	transposase
+```
+
+`expression.tsv`
+
+```text
+gene_id	tpm
+g001	35.2
+g002	110.8
+g003	4.1
+g005	0.0
+g006	58.9
+```
+
+Both files have a header line. Skip it when you read the data.
+
+a. Write `read_annotations(filename)`. It returns a dictionary keyed by `gene_id`. Each value is a tuple `(chrom, product)`.
+
+b. Write `read_expression(filename)`. It returns a dictionary keyed by `gene_id`. Each value is the TPM as a `float`.
+
+c. Write `merge_datasets(annotations, expression)`. It returns a dictionary keyed by `gene_id`, containing only genes present in **both** inputs. Each value is a tuple `(chrom, product, tpm)`.
+
+d. Write `write_merged(merged, filename)`. It writes `merged.tsv` with a header line (`gene_id`, `chrom`, `product`, `tpm`) and one row per gene, sorted by `gene_id`. Your output file should contain:
+
+    ```text
+    gene_id	chrom	product	tpm
+    g001	chr1	DNA polymerase	35.2
+    g002	chr1	ribosomal protein L2	110.8
+    g003	chr2	ATP synthase subunit a	4.1
+    g005	chr3	transposase	0.0
+    ```
+
+e. Print to STDOUT the genes that are in only one of the two files:
+
+    ```text
+    Only in annotations: g004
+    Only in expression: g006
+    ```
+
+f. Using the merged dictionary, count the number of genes on each chromosome, and print the counts:
+
+    ```text
+    chr1 2
+    chr2 1
+    chr3 1
+    ```
+
+g. For each chromosome, compute the mean TPM of genes with **TPM greater than 0**. Print the chromosome and mean, rounded to one decimal place. Skip chromosomes that have no genes with TPM > 0.
+
+    ```text
+    chr1 73.0
+    chr2 4.1
+    ```
+
+    (`chr3` is not printed because its only gene has TPM 0.0.)
+
+---
+
+## Submission
+
+Commit and push to your repository:
+
+- `problem1.py`, `problem2.py`, `problem3.py`
+- `gene_lengths.txt`, `annotations.tsv`, `expression.tsv`
+- `merged.tsv` (generated by `problem3.py`)
+
+Your scripts should give the example outputs shown above when run on the data files as written. Check your work on the examples before you commit. The bonus parts are optional.
