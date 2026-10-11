@@ -68,7 +68,7 @@ improve your ability to master UNIX or Programming in Python.
 Grading
 -------
 
-* Homework assignments (6 in total, HW0-HW5): 50% of grade
+* Homework assignments (7 in total, HW0-HW6): 50% of grade
 * Project: 50% of grade
 
 Homework

@@ -66,7 +66,7 @@ defaults:
   - { scope: { path: "Bioinformatics/index.md" }, values: { title: Bioinformatics, has_children: true, nav_order: 4 } }
   - { scope: { path: "Misc/index.md" }, values: { title: Other Skills and Tools, has_children: true, nav_order: 5 } }
   - { scope: { path: "Assignments/index.md" }, values: { title: Assignments, has_children: true, nav_order: 6 } }
-  - { scope: { path: "Resources/index.md" }, values: { title: Resources, has_children: true, nav_order: 7 } }
+  - { scope: { path: "Resources/index.md" }, values: { title: Resources, has_children: true, nav_order: 8 } }
 
   # UNIX
   - { scope: { path: "UNIX/00_Login_Notebook.md" }, values: { title: "UNIX I: Logging In and Command Line Basics", parent: UNIX, nav_order: 1 } }
@@ -79,7 +79,7 @@ defaults:
   - { scope: { path: "Python/02_Loops_IO.md" }, values: { title: "Python II: Decisions, Lists, Loops and Files", parent: Python, nav_order: 2 } }
   - { scope: { path: "Python/03_Dict_Func.md" }, values: { title: "Python III: Dictionaries, Sets, Tuples and Functions", parent: Python, nav_order: 3 } }
   - { scope: { path: "Python/04_Workshop.md" }, values: { title: "Python Workshop: Practice with Real Data", parent: Python, nav_order: 4 } }
-  - { scope: { path: "Python/05_String_patterns.md" }, values: { title: "Python V: Regular Expressions", parent: Python, nav_order: 7 } }
+  - { scope: { path: "Python/05_String_patterns.md" }, values: { title: "Python V: Regular Expressions", parent: Python, nav_order: 8 } }
   - { scope: { path: "Python/06_Packages.md" }, values: { title: "Python IV: Modules, Packages and Biopython", parent: Python, nav_order: 5 } }
   - { scope: { path: "Python/07_Pandas.md" }, values: { title: "Python IV: Tables with Pandas", parent: Python, nav_order: 6 } }
   - { scope: { path: "Python/08_Regexp_Worked_examples.md" }, values: { title: "Python V: Regular Expressions Worked Examples", parent: Python, nav_order: 8 } }
@@ -91,7 +91,7 @@ defaults:
   - { scope: { path: "Bioinformatics/Ranges_Features_overlap.md" }, values: { title: "Genomic Data Ranges", parent: Bioinformatics, nav_order: 4 } }
   - { scope: { path: "Bioinformatics/RNASeq.md" }, values: { title: "RNASeq", parent: Bioinformatics, nav_order: 5 } }
   - { scope: { path: "Bioinformatics/Variants.md" }, values: { title: "Variation and SNPs", parent: Bioinformatics, nav_order: 6 } }
-  - { scope: { path: "Bioinformatics/Workshop_SNPs.md" }, values: { title: "Workshop: SNPs per Gene and Splice Sites", parent: Bioinformatics, nav_order: 7 } }
+  - { scope: { path: "Bioinformatics/Workshop_SNPs.md" }, values: { title: "Workshop: SNPs per Gene and Splice Sites", parent: Bioinformatics, nav_order: 8 } }
   - { scope: { path: "Bioinformatics/Protein_domains.md" }, values: { title: "Protein Domains", parent: Bioinformatics, nav_order: 8 } }
   - { scope: { path: "Bioinformatics/Orthology.md" }, values: { title: "Orthology", parent: Bioinformatics, nav_order: 9 } }
   - { scope: { path: "Bioinformatics/Workshop_networks.md" }, values: { title: "Workshop: Orthologs and Gene Networks", parent: Bioinformatics, nav_order: 10 } }
@@ -103,13 +103,13 @@ defaults:
   - { scope: { path: "Assignments/HW0.md" }, values: { title: "HW0 - Intro", parent: Assignments, nav_order: 1 } }
   - { scope: { path: "Assignments/HW1.md" }, values: { title: "HW1 - Unix", parent: Assignments, nav_order: 2 } }
   - { scope: { path: "Assignments/HW2.md" }, values: { title: "HW2 - Python 1", parent: Assignments, nav_order: 3 } }
-  - { scope: { path: "Assignments/HW3.md" }, values: { title: "HW3 - Python and BLAST", parent: Assignments, nav_order: 4 } }
-  - { scope: { path: "Assignments/HW4.md" }, values: { title: "HW4 - AI Programming", parent: Assignments, nav_order: 5 } }
-  - { scope: { path: "Assignments/HW5.md" }, values: { title: "HW5 - GitHub Website", parent: Assignments, nav_order: 6 } }
-  - { scope: { path: "Assignments/Project_Topics.md" }, values: { title: "Project Topics", parent: Assignments, nav_order: 7 } }
-  - { scope: { path: "Assignments/Project_Ideas.md" }, values: { title: "Project Team Ideas", parent: Assignments, nav_order: 8 } }
-  - { scope: { path: "Assignments/Project_Report_Template.md" }, values: { title: "Project Report Template", parent: Assignments, nav_order: 9 } }
-  - { scope: { path: "Assignments/Project_Presentation.md" }, values: { title: "Project Presentation Info", parent: Assignments, nav_order: 10 } }
+  - { scope: { path: "Assignments/HW4.md" }, values: { title: "HW4 - Python and BLAST", parent: Assignments, nav_order: 5 } }
+  - { scope: { path: "Assignments/HW5.md" }, values: { title: "HW5 - AI Programming", parent: Assignments, nav_order: 6 } }
+  - { scope: { path: "Assignments/HW6.md" }, values: { title: "HW6 - GitHub Website", parent: Assignments, nav_order: 7 } }
+  - { scope: { path: "Assignments/Project_Topics.md" }, values: { title: "Project Topics", parent: Assignments, nav_order: 8 } }
+  - { scope: { path: "Assignments/Project_Ideas.md" }, values: { title: "Project Team Ideas", parent: Assignments, nav_order: 9 } }
+  - { scope: { path: "Assignments/Project_Report_Template.md" }, values: { title: "Project Report Template", parent: Assignments, nav_order: 10 } }
+  - { scope: { path: "Assignments/Project_Presentation.md" }, values: { title: "Project Presentation Info", parent: Assignments, nav_order: 11 } }
   # Other skills
   - { scope: { path: "Misc/Rplotting.md" }, values: { title: "Plotting with R and ggplot2", parent: Other Skills and Tools, nav_order: 1 } }
   - { scope: { path: "Misc/Building_Websites.md" }, values: { title: "Building Websites", parent: Other Skills and Tools, nav_order: 2 } }

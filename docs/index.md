@@ -41,9 +41,9 @@ git clone https://github.com/biodataprog/GEN220_data.git
 * HW0 - [Intro](Assignments/HW0) [PDF](Assignments/HW0.pdf)
 * HW1 - [Unix](Assignments/HW1) [PDF](Assignments/HW1.pdf) - data description: [About the data](Assignments/HW1_data) [PDF](Assignments/HW1_data.pdf)
 * HW2 - [Python 1](Assignments/HW2) [PDF](Assignments/HW2.pdf)
-* HW3 - [Python and BLAST](Assignments/HW3) [PDF](Assignments/HW3.pdf)
-* HW4 - [AI Programming](Assignments/HW4) [PDF](Assignments/HW4.pdf)
-* HW5 - [GitHub Website](Assignments/HW5) [PDF](Assignments/HW5.pdf)
+* HW4 - [Python and BLAST](Assignments/HW4) [PDF](Assignments/HW4.pdf)
+* HW5 - [AI Programming](Assignments/HW5) [PDF](Assignments/HW5.pdf)
+* HW6 - [GitHub Website](Assignments/HW6) [PDF](Assignments/HW6.pdf)
 
 # Project
 * 2026 Project ideas [2026 Project Topics](Assignments/Project_Topics) [PDF](Assignments/Project_Topics.pdf)

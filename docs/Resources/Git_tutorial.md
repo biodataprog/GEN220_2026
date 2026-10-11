@@ -473,7 +473,7 @@ A GitHub repository is more than a backup. The tabs along the top of every repos
 | **Issues** | a to-do list and discussion thread for a repository: bug reports, questions, tasks, with labels and assignees | keep track of tasks for your team project |
 | **Pull requests** | propose, review, and discuss changes before merging them (see above) | team projects |
 | **Actions** | run scripts automatically on GitHub's computers when something happens (a push, a pull request, a schedule) | this course website is built and published by an Action |
-| **Pages** | free web hosting for a website stored in a repository | [Homework 5](../Assignments/HW5) |
+| **Pages** | free web hosting for a website stored in a repository | [Homework 6](../Assignments/HW6) |
 | **Projects** | a planning board (columns like To do / Doing / Done) built from issues | optional, for team projects |
 | **Releases** | a named, downloadable snapshot of the code (e.g. "v1.0" for a paper) | archive your project; connect to [Zenodo](https://docs.github.com/en/repositories/archiving-a-github-repository/referencing-and-citing-content) to get a DOI you can cite |
 | **Codespaces** | a full VS Code editor and Linux terminal in your web browser, for any repository | work from a tablet or a computer without software installed |
@@ -564,7 +564,7 @@ Actions are free for public repositories; private repositories get a monthly all
 - `https://YOURGITHUBID.github.io/` for a repository named `YOURGITHUBID.github.io` (a personal or lab home page), or
 - `https://YOURGITHUBID.github.io/REPONAME/` for any other repository (a project, tool, or course site).
 
-You turn it on under the repository's **Settings** -> **Pages**, either publishing a branch directly or through an Actions workflow. This course site is an example: its Markdown files are in [github.com/biodataprog/GEN220_2026](https://github.com/biodataprog/GEN220_2026), and a workflow builds and publishes it to biodataprog.github.io on every push. [Homework 5](../Assignments/HW5) walks you through making your own site, and the [Building Websites](../Misc/Building_Websites) notes have lab website templates.
+You turn it on under the repository's **Settings** -> **Pages**, either publishing a branch directly or through an Actions workflow. This course site is an example: its Markdown files are in [github.com/biodataprog/GEN220_2026](https://github.com/biodataprog/GEN220_2026), and a workflow builds and publishes it to biodataprog.github.io on every push. [Homework 6](../Assignments/HW6) walks you through making your own site, and the [Building Websites](../Misc/Building_Websites) notes have lab website templates.
 
 ## Personal accounts and organizations
 
