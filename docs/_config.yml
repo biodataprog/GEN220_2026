@@ -58,6 +58,8 @@ defaults:
     values: { nav_exclude: true, search_exclude: true }
   - scope: { path: "01_Intro_Command_Line.md" }
     values: { nav_exclude: true }
+  - scope: { path: "Assignments/HW3.md" }
+    values: { nav_exclude: true, search_exclude: true }
 
   # Section landing pages (top level of the sidebar)
   - { scope: { path: "index.md" }, values: { title: Home, nav_order: 1 } }
@@ -107,7 +109,7 @@ defaults:
   - { scope: { path: "Assignments/HW5.md" }, values: { title: "HW5 - AI Programming", parent: Assignments, nav_order: 6 } }
   - { scope: { path: "Assignments/HW6.md" }, values: { title: "HW6 - GitHub Website", parent: Assignments, nav_order: 7 } }
   - { scope: { path: "Assignments/Project_Topics.md" }, values: { title: "Project Topics", parent: Assignments, nav_order: 8 } }
-  - { scope: { path: "Assignments/Project_Ideas.md" }, values: { title: "Project Team Ideas", parent: Assignments, nav_order: 9 } }
+  - { scope: { path: "Assignments/Project_Ideas.md" }, values: { title: "Project Team Ideas", nav_exclude: true } }
   - { scope: { path: "Assignments/Project_Report_Template.md" }, values: { title: "Project Report Template", parent: Assignments, nav_order: 10 } }
   - { scope: { path: "Assignments/Project_Presentation.md" }, values: { title: "Project Presentation Info", parent: Assignments, nav_order: 11 } }
   # Other skills
