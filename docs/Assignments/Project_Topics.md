@@ -1,6 +1,28 @@
 Project Topics
 =====
 
+**Contents**
+
+* [Project overview](#project-overview): requirements, [deliverables and timeline](#deliverables-and-timeline), scoping advice
+
+**Project ideas**
+
+* [Mutating for Fun](#mutating-for-fun)
+* [Transporterland](#transporterland)
+* [From SNPs to Genes to Functions](#from-snps-to-genes-to-functions)
+* [Genome (RE)assembly and Organelle Genomes](#genome-reassembly-and-organelle-genomes)
+* [Secondary Metabolism: Biosynthetic Gene Clusters](#secondary-metabolism-biosynthetic-gene-clusters)
+* [Gene Structure Across Species ("Team Gene")](#gene-structure-across-species-team-gene)
+* [Transcriptome Differences ("Team Transcriptome")](#transcriptome-differences-team-transcriptome)
+* [Protein Content and Adaptation ("Team Proteins")](#protein-content-and-adaptation-team-proteins)
+* [Hidden Passengers ("Team Russian Doll")](#hidden-passengers-team-russian-doll)
+* [Microbiome and Metagenome Comparisons ("Team Microbiome")](#microbiome-and-metagenome-comparisons-team-microbiome)
+* [Superfolding: Protein Structure Prediction](#superfolding-protein-structure-prediction)
+* [Workflow Engineering (Nextflow / Snakemake)](#workflow-engineering-nextflow-snakemake)
+* [Propose your own](#propose-your-own)
+
+---
+
 # Project overview
 
 Projects are done in teams of 2-3 and are 50% of the course grade. The goal is to ask a biological question that can be answered with public data, build a reproducible pipeline (shell, Python, SLURM; Nextflow/Snakemake optional) to answer it, and report what you found, including what did not work.
