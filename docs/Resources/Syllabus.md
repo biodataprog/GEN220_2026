@@ -106,9 +106,11 @@ Webcam and microphone (to participate in any video components, e.g. live session
 Projects
 --------
 
-* Project Topics will be discussed in October and teams will select a project idea to focus on.
+* [Project Topics](../Assignments/Project_Topics) ([PDF](../Assignments/Project_Topics.pdf)) will be discussed in October and teams will select a project idea to focus on. See also the [report template](../Assignments/Project_Report_Template) and [presentation info](../Assignments/Project_Presentation).
 
 * Project will be 2-3 individuals working together.
+
+* Key dates: abstract due Oct-29, halfway progress milestone Nov-17, presentations Dec-3, final report Dec-9.
 
 * A presentation will be made by each team - last day(s) of class.
 
@@ -130,14 +132,14 @@ Schedule
 | Oct-13 | Tu | Python III - Dictionaries and Functions |  |
 | Oct-15 | Th | Bioinformatics I - Sequence search: BLAST on the command line | Homework 3 assigned |
 | Oct-20 | Tu | Python IV - Modules, BioPython and Pandas | Homework 2 Due |
-| Oct-22 | Th | Python V - Regular Expressions. Class Project Info |  |
+| Oct-22 | Th | Python V - Regular Expressions. Class Project Info: [Project Topics](../Assignments/Project_Topics) |  |
 | Oct-27 | Tu | Bioinformatics workshop - parsing BLAST and data tables in Python | |
-| Oct-29 | Th | Running analyses on the cluster: SLURM job scripts and job arrays | Class Project Outline/Abstract due |
+| Oct-29 | Th | Running analyses on the cluster: SLURM job scripts and job arrays | Class Project Outline/Abstract due ([details](../Assignments/Project_Topics#deliverables-and-timeline)) |
 | Nov-3 | Tu | Bioinformatics II - Short read alignment and genomic ranges (BWA, samtools, bedtools) | Homework 3 Due |
 | Nov-5 | Th | Bioinformatics III - RNASeq analyses |  |
 | Nov-10 | Tu | Building websites with GitHub Pages, Markdown and HTML | Homework 5 assigned |
 | Nov-12 | Th | Bioinformatics IV - SNPs and variants | Homework 4 Due  |
-| Nov-17 | Tu | Bioinformatics V - Protein domains and homology search (HMMER, Pfam) | |
+| Nov-17 | Tu | Bioinformatics V - Protein domains and homology search (HMMER, Pfam) | Class Project halfway milestone due ([details](../Assignments/Project_Topics#deliverables-and-timeline)) |
 | Nov-19 | Th | Bioinformatics VI - Orthology and phylogenetics |  |
 | Nov-24 | Tu | Bioinformatics VII - Sequence evolution and statistics: Ka/Ks, simulation, shuffling and p-values | Homework 5 (GitHub website) Due |
 | Nov-26 | Th | ** NO CLASS ** - Thanksgiving |  |

@@ -1053,3 +1053,6 @@ Try them yourself first!
   `.str.replace()` apply regular expressions to a whole column at once.
 * [Plotting](09_Plotting): plot what you extracted, e.g. the distribution of
   motif counts per chromosome.
+* [Class project topics](../Assignments/Project_Topics): project ideas, the
+  [abstract and milestone dates](../Assignments/Project_Topics#deliverables-and-timeline),
+  and what to hand in. Start thinking about your team and topic.
