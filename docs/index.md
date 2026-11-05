@@ -79,6 +79,7 @@ The course will be divided into three topic areas.
 1. [Bioinformatics: Short Reads](Bioinformatics/Short_read_aligning) [PDF](Bioinformatics/Short_read_aligning.pdf)
 1. [Bioinformatics: Genomic Data Ranges](Bioinformatics/Ranges_Features_overlap) [PDF](Bioinformatics/Ranges_Features_overlap.pdf)
 1. [Bioinformatics: RNASeq](Bioinformatics/RNASeq) [PDF](Bioinformatics/RNASeq.pdf)
+1. [Bioinformatics: Single-cell RNASeq](Bioinformatics/scRNASeq) [PDF](Bioinformatics/scRNASeq.pdf)
 1. [Bioinformatics: Variation and SNPs](Bioinformatics/Variants) [PDF](Bioinformatics/Variants.pdf)
 1. [Bioinformatics: Workshop - SNPs per gene and splice sites](Bioinformatics/Workshop_SNPs) [PDF](Bioinformatics/Workshop_SNPs.pdf)
 1. [Bioinformatics: Protein domains](Bioinformatics/Protein_domains) [PDF](Bioinformatics/Protein_domains.pdf)
