@@ -6,7 +6,7 @@ Homework is accepted through GitHub Classroom links posted in [Canvas](https://e
 * HW0 - [Intro](HW0) [PDF](HW0.pdf)
 * HW1 - [Unix](HW1) [PDF](HW1.pdf) - data description: [About the data](HW1_data) [PDF](HW1_data.pdf)
 * HW2 - [Python 1](HW2) [PDF](HW2.pdf)
-* HW4 - [Python and BLAST](HW4) [PDF](HW4.pdf)
+* HW4 - [Python and BLAST](HW4_new) [PDF](HW4_new.pdf)
 * HW5 - [AI Programming](HW5) [PDF](HW5.pdf)
 * HW6 - [GitHub Website](HW6) [PDF](HW6.pdf)
 
