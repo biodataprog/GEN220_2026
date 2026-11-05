@@ -176,6 +176,7 @@ For a human or mouse study, use the GENCODE transcript FASTA, and add the genome
 ```bash
 module load kallisto/0.48.0
 kallisto index -i index/Scer.kidx genome/S_cerevisiae.ORFs.fasta.gz
+mkdir -p results/kallisto      # kallisto does not create parent folders
 kallisto quant -t $CPU -i index/Scer.kidx -o results/kallisto/AmpB.Rep1 \
   data/SRR3396381_1.fastq.gz data/SRR3396381_2.fastq.gz
 ```
@@ -187,7 +188,7 @@ With paired-end reads, kallisto measures the fragment length itself. Only for si
 You must know the strandedness to count reads correctly. A wrong setting can lose half the reads or count antisense reads.
 `salmon -l A` reports it in `lib_format_counts.json` and in `logs/salmon_quant.log`:
 
-<!-- TODO YEAST_LIBTYPE_PLACEHOLDER: add yeast results after the run -->
+For our yeast samples, salmon reported `"expected_format": "IU"` for all six samples: inward-facing read pairs, **unstranded**. So we use `featureCounts -s 0`.
 
 | salmon | Meaning | featureCounts | kallisto | HISAT2 |
 |---|---|---|---|---|
@@ -236,7 +237,21 @@ Notes on `featureCounts`:
 
 Look at your alignments in a genome browser (IGV or JBrowse). See the [genome browser lecture](Genome_Browsers).
 
-<!-- TODO YEAST_MAPPING_PLACEHOLDER: add yeast results after the run -->
+## Our yeast mapping results
+
+| Sample | Read pairs | salmon mapping rate | kallisto pseudoaligned | HISAT2 overall alignment | featureCounts assigned |
+|---|---|---|---|---|---|
+| Control.Rep1 | 9,625,471 | 81.2% | 93.4% | 95.8% | 79.5% |
+| Control.Rep2 | 10,302,142 | 83.3% | 94.3% | 97.0% | 80.7% |
+| Control.Rep3 | 9,997,148 | 81.1% | 92.4% | 96.7% | 74.7% |
+| AmpB.Rep1 | 8,405,534 | 82.7% | 93.8% | 96.9% | 80.7% |
+| AmpB.Rep2 | 9,755,935 | 81.1% | 93.2% | 95.5% | 79.6% |
+| AmpB.Rep3 | 10,175,785 | 82.1% | 93.8% | 96.3% | 80.5% |
+
+* Each tool reports a different rate, because each one asks a different question. HISAT2 counts reads that align anywhere in the genome. featureCounts counts read pairs that fall on exactly one gene. salmon and kallisto count fragments that match the ORF sequences. salmon (selective alignment) needs an alignment score above a minimum, so it accepts fewer fragments than kallisto.
+* In featureCounts, most unassigned pairs are multi-mapping (10.8-17.3%; for example rRNA and Ty element copies) or overlap two genes (`Unassigned_Ambiguity`).
+* Control.Rep3 has more multi-mapping pairs (17.3%) than the other samples (10.8-11.4%). This is a small QC flag. Compare it with the PCA plot below.
+* Run times on the `short` partition with 8 CPUs, all six samples: salmon 3.7 min, HISAT2 + featureCounts 23 min, FastQC (12 CPUs) 2 min.
 
 # Measuring expression: counts, TPM and FPKM
 
@@ -318,7 +333,21 @@ The design tells DESeq2 which variables explain the counts. Put the variable of 
 
 A batch can only be removed if each batch contains both conditions. If all controls are in batch 1 and all treated samples in batch 2, the design is confounded, and no formula can fix it.
 
-<!-- TODO YEAST_RESULTS_PLACEHOLDER: add yeast results after the run -->
+## Our yeast results
+
+`summary(res)` for AmpB vs Control (6,199 genes after the filter):
+
+```text
+adjusted p-value < 0.05
+LFC > 0 (up)       : 1009, 16%
+LFC < 0 (down)     : 971, 16%
+outliers [1]       : 2, 0.032%
+low counts [2]     : 241, 3.9%
+```
+
+* 1,980 genes have `padj < 0.05`. This is one third of the genes. With a strong treatment, a statistical test finds many small changes.
+* Only 182 of these genes also have a shrunken |log2 fold change| > 1 (2-fold): 133 up and 49 down. A fold change cut-off gives a shorter list of large changes.
+* The top genes by `padj` are amino acid biosynthesis genes (ARG1, ARG3, ARG4, ARG5,6, ARG7, CPA1, CPA2, LYS1, LYS2, HOM3), all up in AmpB. Use a GO enrichment test (step 6) before you draw a conclusion.
 
 # Step 5. Visualize the results
 
@@ -332,7 +361,11 @@ plotPCA(vsd, intgroup = "cond")
 pheatmap(as.matrix(dist(t(assay(vsd)))))
 ```
 
-<!-- TODO YEAST_PCA_PLACEHOLDER: add yeast results after the run -->
+![PCA of the yeast samples](images/rnaseq/pca.png)
+
+PC1 explains 78% of the variance and separates AmpB from Control. This is a strong treatment effect. PC2 (10%) separates Control.Rep3 and AmpB.Rep2 from the other replicates.
+
+![Sample distance heatmap](images/rnaseq/sample_distance.png)
 
 * Replicates of one condition should be near each other.
 * If samples group by date, lane or another batch, include that variable in the design.
@@ -343,10 +376,20 @@ pheatmap(as.matrix(dist(t(assay(vsd)))))
 ```r
 hist(res$pvalue[res$baseMean > 1], breaks = 50)  # p-value histogram
 plotMA(resLFC, ylim = c(-5, 5))                  # fold change vs mean expression
-plotCounts(dds, gene = "YOR011W", intgroup = "cond")  # one gene
+plotCounts(dds, gene = "YGL117W", intgroup = "cond")  # one gene
 ```
 
-<!-- TODO YEAST_GENEPLOTS_PLACEHOLDER: add yeast results after the run -->
+![p-value histogram](images/rnaseq/pvalue_hist.png)
+
+![MA plot](images/rnaseq/MA.png)
+
+![Volcano plot](images/rnaseq/volcano.png)
+
+![Top 30 genes](images/rnaseq/top30_heatmap.png)
+
+![Counts for the top gene](images/rnaseq/top_gene_counts.png)
+
+**Look at the outliers.** In the volcano plot, one gene is far to the left (shrunken log2 fold change = -10.3). It is YNL054W-A, a Ty1 retrotransposon gene. The salmon counts are 141, 126 and 108 reads in the controls, and 0 in all three AmpB samples. A complete loss like this can come from a difference in the genome of the cultures (a missing Ty copy), not from the drug. These data cannot tell the two causes apart. Always check the counts and the gene description before you interpret a result.
 
 * **p-value histogram**: a flat background with a peak near 0 is good. A peak near 1, or a U shape, means a problem with the model or the data.
 * **MA plot**: x = mean expression, y = log2 fold change. Blue points are significant. Most genes should lie near 0.
