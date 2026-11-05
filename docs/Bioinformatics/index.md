@@ -8,6 +8,7 @@ Lectures on sequence search, short read alignment, RNASeq, variant calling, geno
 1. [Short Reads](Short_read_aligning) [PDF](Short_read_aligning.pdf)
 1. [Genomic Data Ranges](Ranges_Features_overlap) [PDF](Ranges_Features_overlap.pdf)
 1. [RNASeq](RNASeq) [PDF](RNASeq.pdf)
+1. [Single-cell RNASeq](scRNASeq) [PDF](scRNASeq.pdf)
 1. [Variation and SNPs](Variants) [PDF](Variants.pdf)
 1. [Workshop: Which genes have the most SNPs? (and splice-site SNPs)](Workshop_SNPs) [PDF](Workshop_SNPs.pdf)
 1. [Protein domains](Protein_domains) [PDF](Protein_domains.pdf) - also see the [Domains lecture slides](Domains_lecture.pdf)
