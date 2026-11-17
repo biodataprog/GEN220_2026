@@ -9,6 +9,7 @@ Lectures on sequence search, short read alignment, RNASeq, variant calling, geno
 1. [Genome Assembly](Assembly) [PDF](Assembly.pdf)
 1. [Genomic Data Ranges](Ranges_Features_overlap) [PDF](Ranges_Features_overlap.pdf)
 1. [RNASeq](RNASeq) [PDF](RNASeq.pdf)
+1. [Single-cell RNASeq](scRNASeq) [PDF](scRNASeq.pdf)
 1. [Genome Annotation and Gene Prediction](Genome_annotation_gene_prediction) [PDF](Genome_annotation_gene_prediction.pdf)
 1. [Variation and SNPs](Variants) [PDF](Variants.pdf)
 1. [Workshop: Which genes have the most SNPs? (and splice-site SNPs)](Workshop_SNPs) [PDF](Workshop_SNPs.pdf)
